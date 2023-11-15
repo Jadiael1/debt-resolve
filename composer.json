@@ -1,9 +1,31 @@
 {
-    "name": "laravel/laravel",
+    "name": "jadiael/debtresolve",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
-    "license": "MIT",
+    "description": "The DebtResolve System is a platform built on Laravel, providing a REST API for registering and managing debts. Users can register, log in, and create debts, taking roles as collectors or debtors. Additionally, users can invite others to join the debts and, if required, send unique registration links to new users.",
+    "keywords": [
+        "debt management",
+        "sistema de cobrança",
+        "registro de dívidas",
+        "gestão financeira",
+        "controle de dívidas",
+        "sistema de cobrança online",
+        "pagamento de dívidas",
+        "finanças pessoais",
+        "gestão de crédito",
+        "controle financeiro",
+        "sistema de convite único",
+        "sistema de registro de usuários",
+        "sistema de login seguro",
+        "gestão de débitos",
+        "cobrança de dívidas"
+    ],
+    "license": "CC-BY-NC",
+    "authors": [
+        {
+            "name": "Jadiael",
+            "email": "jadiael@hotmail.com.br"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
