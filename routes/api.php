@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/unauthorized', [AuthController::class, 'unauthorized'])->name('login');
 
 Route::post('/signup', [AuthController::class, 'register'])->name('register');
 
