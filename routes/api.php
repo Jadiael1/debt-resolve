@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ChargeController;
 use App\Http\Controllers\API\NewPasswordController;
 use App\Http\Controllers\API\EmailVerificationController;
+use App\Http\Controllers\API\InstallmentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +32,15 @@ Route::post('/email/resend-activation-link', [EmailVerificationController::class
 
 Route::post('/forgot-password', [NewPasswordController::class, 'forgotPassword']);
 Route::post('/reset-password', [NewPasswordController::class, 'resetPassword'])->name('password.reset');
+
+
+
+
+Route::get('/charges/{charge_id}/installments', [ChargeController::class, 'listInstallments']);
+Route::post('/charges', [ChargeController::class, 'store'])->middleware(['auth:sanctum']);
+Route::post('/installments/{installment_id}/generate-payment', [InstallmentController::class, 'generatePayment']);
+Route::post('/installments/{installment_id}/proof-upload', [InstallmentController::class, 'proofUpload']);
+
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/user', function (Request $request) {
