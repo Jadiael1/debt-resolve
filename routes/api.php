@@ -1,9 +1,8 @@
 <?php
-
-use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\Auth\EmailVerificationController;
+use App\Http\Controllers\API\Auth\NewPasswordController;
 use App\Http\Controllers\API\ChargeController;
-use App\Http\Controllers\API\NewPasswordController;
-use App\Http\Controllers\API\EmailVerificationController;
 use App\Http\Controllers\API\InstallmentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,30 +18,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/unauthorized', [AuthController::class, 'unauthorized'])->name('login');
-
-Route::post('/signup', [AuthController::class, 'register'])->name('register');
-
-
-Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
-Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
-Route::post('/email/resend-activation-link', [EmailVerificationController::class, 'resendActivationLink'])->middleware(['auth:sanctum', 'throttle:2,1'])->name('verification.send');
-
-Route::post('/forgot-password', [NewPasswordController::class, 'forgotPassword']);
-Route::post('/reset-password', [NewPasswordController::class, 'resetPassword'])->name('password.reset');
-
-
-
-
-Route::get('/charges/{charge_id}/installments', [ChargeController::class, 'listInstallments']);
-Route::post('/charges', [ChargeController::class, 'store'])->middleware(['auth:sanctum']);
-Route::post('/installments/{installment_id}/generate-payment', [InstallmentController::class, 'generatePayment']);
-Route::post('/installments/{installment_id}/proof-upload', [InstallmentController::class, 'proofUpload']);
-
-
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function () {
+    Route::prefix('/auth')->group(function () {
+        Route::post('/signup', [AuthController::class, 'signup'])->middleware(['guest'])->name('auth.signup');
+        Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
+        Route::post('/signin', [AuthController::class, 'signin'])->middleware(['guest'])->name('auth.signin');
+        Route::post('/email/resend-activation-link', [EmailVerificationController::class, 'resendActivationLink'])->middleware(['auth:sanctum', 'throttle:2,1'])->name('verification.send');
+        Route::post('/forgot-password', [NewPasswordController::class, 'forgotPassword'])->middleware(['guest'])->name('auth.forgotPassword');
+        Route::post('/reset-password', [NewPasswordController::class, 'resetPassword'])->middleware(['guest'])->name('auth.resetPassword');
+        Route::get('/email/activation-notice', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+        Route::get('/unauthorized', [AuthController::class, 'unauthorized'])->middleware(['guest'])->name('login');
+    });
+    Route::prefix('charges')->middleware(['auth:sanctum', 'verified'])->group(function () {
+        Route::get('/{charge_id}/installments', [ChargeController::class, 'listInstallments'])->name('charges.listInstallments');
+        Route::post('/', [ChargeController::class, 'store'])->name('charges.store');
+    });
+    Route::prefix('installments')->middleware(['auth:sanctum', 'verified'])->group(function () {
+        Route::post('/{installment_id}/generate-payment', [InstallmentController::class, 'generatePayment'])->name('installments.generatePayment');
+        Route::post('/{installment_id}/proof-upload', [InstallmentController::class, 'proofUpload'])->name('installments.proofUpload');
+    });
 });
