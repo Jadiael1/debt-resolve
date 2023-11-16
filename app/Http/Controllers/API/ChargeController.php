@@ -13,7 +13,7 @@ class ChargeController extends Controller
     public function listInstallments($chargeId)
     {
         $charge = Charge::findOrFail($chargeId);
-        $installments = $charge->installments_number; // Supondo que existe um relacionamento 'parcelas' na sua model
+        $installments = $charge->installments()->get();
         return response()->json(['Installments' => $installments]);
     }
 

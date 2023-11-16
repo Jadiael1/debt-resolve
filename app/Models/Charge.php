@@ -19,6 +19,11 @@ class Charge extends Model
         return $this->belongsTo(User::class, 'debtor_id');
     }
 
+    public function installments(){
+        return $this->hasMany(Installment::class, 'charge_id');
+
+    }
+
 
 
 }
