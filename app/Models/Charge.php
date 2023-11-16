@@ -9,6 +9,16 @@ class Charge extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'amount',
+        'installments_number',
+        'due_day',
+        'collector_id',
+        'debtor_id',
+    ];
+
     public function collector()
     {
         return $this->belongsTo(User::class, 'collector_id');
@@ -19,11 +29,8 @@ class Charge extends Model
         return $this->belongsTo(User::class, 'debtor_id');
     }
 
-    public function installments(){
+    public function installments()
+    {
         return $this->hasMany(Installment::class, 'charge_id');
-
     }
-
-
-
 }

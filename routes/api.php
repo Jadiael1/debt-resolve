@@ -30,8 +30,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/unauthorized', [AuthController::class, 'unauthorized'])->middleware(['guest'])->name('login');
     });
     Route::prefix('charges')->middleware(['auth:sanctum', 'verified'])->group(function () {
-        Route::get('/{charge_id}/installments', [ChargeController::class, 'listInstallments'])->name('charges.listInstallments');
+        Route::get('/', [ChargeController::class, 'index'])->name('charges.index');
         Route::post('/', [ChargeController::class, 'store'])->name('charges.store');
+        Route::get('/{charge_id}/installments', [ChargeController::class, 'listInstallments'])->name('charges.listInstallments');
     });
     Route::prefix('installments')->middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/{installment_id}/generate-payment', [InstallmentController::class, 'generatePayment'])->name('installments.generatePayment');

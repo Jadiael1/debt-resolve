@@ -42,4 +42,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function collectors()
+    {
+        return $this->hasMany(Charge::class, 'collector_id');
+    }
+
+    public function debtors()
+    {
+        return $this->hasMany(Charge::class, 'debtor_id');
+    }
 }
