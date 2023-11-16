@@ -25,7 +25,7 @@ Route::post('/signup', [AuthController::class, 'register'])->name('register');
 
 Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
 Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
-Route::post('/email/resend-activation-link', [EmailVerificationController::class, 'resendActivationLink'])->middleware(['auth:sanctum'])->name('verification.send');
+Route::post('/email/resend-activation-link', [EmailVerificationController::class, 'resendActivationLink'])->middleware(['auth:sanctum', 'throttle:2,1'])->name('verification.send');
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/user', function (Request $request) {
