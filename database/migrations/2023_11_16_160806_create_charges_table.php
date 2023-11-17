@@ -18,8 +18,8 @@ return new class extends Migration
             $table->decimal('amount', 10, 2, true); // total da divida
             $table->integer('installments_number')->nullable(); // numero de parcelas
             $table->tinyInteger('due_day'); // dia de vencimento
-            $table->unsignedBigInteger('collector_id'); // cobrador
-            $table->unsignedBigInteger('debtor_id'); // devedor
+            $table->unsignedBigInteger('collector_id')->nullable(); // cobrador
+            $table->unsignedBigInteger('debtor_id')->nullable(); // devedor
             $table->foreign('collector_id')->references('id')->on('users');
             $table->foreign('debtor_id')->references('id')->on('users');
             $table->timestamps();

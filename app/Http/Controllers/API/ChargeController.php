@@ -18,7 +18,8 @@ class ChargeController extends Controller
     }
 
 
-    public function index(){
+    public function index()
+    {
         $collectors = auth()->user()->collectors;
         $debtors = auth()->user()->debtors;
         $mergedResult = $collectors->merge($debtors);
@@ -34,8 +35,12 @@ class ChargeController extends Controller
             'installments_number' => 'required|integer',
             'due_day' => 'required|integer',
             'collector_id' => 'integer',
-            'debtor_id' => 'required|integer'
+            'debtor_id' => 'integer'
         ]);
+        if (!$request->collector_id && !$request->debtor_id) {
+            return response()->json(['message' => 'You need to choose whether you are the collector or the debtor of the charge'], 422);
+        }
+
         $charge = Charge::where(
             [
                 ['name', $request->name],
@@ -43,7 +48,7 @@ class ChargeController extends Controller
                 ['amount', $request->amount],
                 ['installments_number', $request->installments_number],
                 ['due_day', $request->due_day],
-                ['collector_id', $request->collector_id ?? auth()->id()],
+                ['collector_id', $request->collector_id],
                 ['debtor_id', $request->debtor_id],
             ]
         )->first();
@@ -58,7 +63,7 @@ class ChargeController extends Controller
             'amount' => $request->amount, // Valor total da dívida
             'installments_number' => $request->installments_number, // Número de parcelas
             'due_day' => $request->due_day, // dia de vencimento
-            'collector_id' => $request->collector_id ?? auth()->id(), // ID do usuário cobrador
+            'collector_id' => $request->collector_id, // ID do usuário cobrador
             'debtor_id' => $request->debtor_id // ID do usuário devedor enviado pelo formulário
         ]);
 
