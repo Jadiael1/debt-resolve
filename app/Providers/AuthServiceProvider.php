@@ -35,8 +35,8 @@ class AuthServiceProvider extends ServiceProvider
             $urlScheme = parse_url($url, PHP_URL_SCHEME);
             $urlHost = parse_url($url, PHP_URL_HOST);
             $urlPort = parse_url($url, PHP_URL_PORT) !== null ? ":" . parse_url($url, PHP_URL_PORT) : "";
-            $urlPath = parse_url($url, PHP_URL_PATH);
-            $url = str_replace("{$urlScheme}://{$urlHost}{$urlPort}", $newDomain, $url);
+            // $urlPath = parse_url($url, PHP_URL_PATH);
+            $url = str_replace("{$urlScheme}://{$urlHost}{$urlPort}/api/v1/auth/email/verify/", "$newDomain", $url);
             $url = str_replace("/api/v1", "", $url);
             return (new MailMessage)
                 ->subject(Lang::get('Verify Email Address'))

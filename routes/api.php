@@ -33,6 +33,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [ChargeController::class, 'index'])->name('charges.index');
         Route::post('/', [ChargeController::class, 'store'])->name('charges.store');
         Route::get('/{charge_id}/installments', [ChargeController::class, 'listInstallments'])->name('charges.listInstallments');
+        Route::post('/charge-invitation', [ChargeController::class, 'chargeInvitation'])->name('charges.chargeInvitation');
+        Route::post('/process-charge-invitations/{token}', [ChargeController::class, 'processChargeInvitations'])->name('charges.processChargeInvitations');
+        Route::get('/charge-invitations/{email}', [ChargeController::class, 'chargeInvitations'])->name('charges.chargeInvitations');
     });
     Route::prefix('installments')->middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/{installment_id}/generate-payment', [InstallmentController::class, 'generatePayment'])->name('installments.generatePayment');
