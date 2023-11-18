@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('charge_invitations', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->string('token');
+            $table->string('email')->comment('Email invited to be part of the billing');
+            $table->string('token')->comment('Billing invitation token');
             // $table->enum('status', ['debtor', 'collector'])->nullable();
-            $table->unsignedBigInteger('charge_id');
-            $table->unsignedBigInteger('user_id');
-            $table->boolean('is_valid')->default(true);
+            $table->unsignedBigInteger('charge_id')->comment('Charge identification');
+            $table->unsignedBigInteger('user_id')->comment('Identification of the user who made the invitation');
+            $table->boolean('is_valid')->default(true)->comment('Defines whether the invitation is still valid or not');
             $table->foreign('charge_id')->references('id')->on('charges');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

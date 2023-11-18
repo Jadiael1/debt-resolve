@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('installments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('value', 10, 2); // valor total da parcela
-            $table->integer('installment_number'); // numero da parcela
-            $table->date('due_date'); // data de vencimento
-            $table->decimal('amount_paid', 10, 2)->nullable(); // Valor pago na parcela
-            $table->boolean('paid')->default(false); // parcela paga
-            $table->string('payment_proof')->nullable(); //comprovante do pagamento da parcela
+            $table->decimal('value', 10, 2)->comment('Total installment amount'); // valor total da parcela
+            $table->integer('installment_number')->comment('Installment number'); // numero da parcela
+            $table->date('due_date')->comment('Due date'); // data de vencimento
+            $table->decimal('amount_paid', 10, 2)->nullable()->comment('Amount paid in installment'); // Valor pago na parcela
+            $table->boolean('paid')->default(false)->comment('Determines whether the installment has been paid or remains to be paid'); // parcela paga
+            $table->string('payment_proof')->nullable()->comment('Proof of payment'); //comprovante do pagamento da parcela
 
-            $table->unsignedBigInteger('user_id')->nullable(); // ID do usuário que pagou
-            $table->unsignedBigInteger('charge_id');
+            $table->unsignedBigInteger('user_id')->nullable()->comment('Payer identification'); // ID do usuário que pagou
+            $table->unsignedBigInteger('charge_id')->comment('Charge identification'); //Identificação da cobrança
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('charge_id')->references('id')->on('charges')->onDelete('cascade');
             $table->timestamps();

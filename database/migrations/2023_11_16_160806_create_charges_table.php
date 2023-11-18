@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('charges', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100); //nome da cobrança
-            $table->string('description'); //descrição da cobrança
-            $table->decimal('amount', 10, 2, true); // total da divida
-            $table->integer('installments_number')->nullable(); // numero de parcelas
-            $table->tinyInteger('due_day'); // dia de vencimento
-            $table->unsignedBigInteger('collector_id')->nullable(); // cobrador
-            $table->unsignedBigInteger('debtor_id')->nullable(); // devedor
+            $table->string('name', 100)->comment('Billing name'); //nome da cobrança
+            $table->string('description')->comment('Charge description'); //descrição da cobrança
+            $table->decimal('amount', 10, 2, true)->comment('Total debt'); // total da divida
+            $table->integer('installments_number')->nullable()->comment('Number of installments'); // numero de parcelas
+            $table->tinyInteger('due_day')->comment('Due day'); // dia de vencimento
+            $table->unsignedBigInteger('collector_id')->nullable()->comment('Collector id'); // cobrador
+            $table->unsignedBigInteger('debtor_id')->nullable()->comment('Collector id'); // devedor
             $table->foreign('collector_id')->references('id')->on('users');
             $table->foreign('debtor_id')->references('id')->on('users');
             $table->timestamps();
