@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('value', 10, 2); // valor total da parcela
             $table->integer('installment_number'); // numero da parcela
             $table->date('due_date'); // data de vencimento
-            $table->decimal('amount_paid', 10, 2); // Valor pago na parcela
+            $table->decimal('amount_paid', 10, 2)->nullable(); // Valor pago na parcela
             $table->boolean('paid')->default(false); // parcela paga
             $table->string('payment_proof')->nullable(); //comprovante do pagamento da parcela
 

@@ -23,9 +23,7 @@ class InstallmentFactory extends Factory
         return [
             'value' => $this->faker->randomFloat(2, 100, 1000),
             'installment_number' => 1,
-            'due_date' => $this->faker->date(),
-            'amount_paid' => $this->faker->randomFloat(2, 50, 500),
-            'paid' => false
+            'due_date' => $this->faker->date()
         ];
     }
 }
