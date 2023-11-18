@@ -19,11 +19,12 @@ return new class extends Migration
             $table->decimal('amount_paid', 10, 2)->nullable()->comment('Amount paid in installment'); // Valor pago na parcela
             $table->boolean('paid')->default(false)->comment('Determines whether the installment has been paid or remains to be paid'); // parcela paga
             $table->string('payment_proof')->nullable()->comment('Proof of payment'); //comprovante do pagamento da parcela
+            $table->boolean('awaiting_approval')->default(false)->comment('Determines whether the payment is awaiting approval by the collector.');
 
             $table->unsignedBigInteger('user_id')->nullable()->comment('Payer identification'); // ID do usuário que pagou
             $table->unsignedBigInteger('charge_id')->comment('Charge identification'); //Identificação da cobrança
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('charge_id')->references('id')->on('charges')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('charge_id')->references('id')->on('charges');
             $table->timestamps();
         });
     }
