@@ -167,6 +167,68 @@ class ChargeController extends Controller
         return $chargeInvitation;
     }
 
+    public function uploadReceipt(Installment $installment, Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'charge_id' => 'required|integer'
+        ]);
+        if (!$request->hasFile('image')) {
+            return response()->json(['message' => 'This installment is already under payment approval analysis'], 400);
+        }
+        if (!$installment) {
+            return response()->json(['message' => 'Installment not found'], 404);
+        }
+        $charge = $installment->charge()->first();
+        if (!$charge->debtor_id || $charge->debtor_id !== auth()->id()) {
+            return response()->json(['message' => 'You cannot send payment for an installment of a charge for which you are not the debtor'], 403);
+        }
+        $image = $request->file('image');
+        $filename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension = $image->getClientOriginalExtension();
+        $newFileName = $filename . "_" . time() . "." . $extension;
+        $path = $image->storeAs("public/receipts/{$charge->id}/", $newFileName);
+        $installment->update(['payment_proof' => json_encode([
+            "originalFileName" => $filename . "." . $extension,
+            "newFileName" => $newFileName,
+            "path" => $path
+        ])]);
+        return response()->json(['message' => 'Proof sent successfully', 'path' => $path], 200);
+    }
+
+    public function getPaymentsForApproval(Request $request, Charge $charge)
+    {
+        $request->validate([
+            'charge_id' => 'required|integer'
+        ]);
+        if ($charge->collector_id !== auth()->id()) {
+            return response()->json(['message' => 'You are not the collector of this charge, so you cannot get payments on approval.'], 403);
+        }
+        return $charge->installments()->where('awaiting_approval', true)->get();
+    }
+
+    public function sendPayment(Installment $installment, Request $request)
+    {
+        $request->validate([
+            'charge_id' => 'required|integer'
+        ]);
+        if (!$installment) {
+            return response()->json(['message' => 'Installment not found'], 404);
+        }
+        if ($installment->awaiting_approval) {
+            return response()->json(['message' => 'This installment is already under payment approval analysis'], 409);
+        }
+        if (empty($installment->payment_proof)) {
+            return response()->json(['message' => 'Before sending the payment for analysis you need to send proof of payment'], 422);
+        }
+        $charge = $installment->charge()->first();
+        if (!$charge->debtor_id || $charge->debtor_id !== auth()->id()) {
+            return response()->json(['message' => 'You cannot send payment for an installment of a charge for which you are not the debtor'], 403);
+        }
+        $installment->update(['awaiting_approval' => true]);
+        return response()->json(['message' => 'Payment of the installment of the charge sent for analysis successfully'], 200);
+    }
+
     private function sendChargeInvitationNotification($token, $charge)
     {
         $user = User::where('id', auth()->id())->first();

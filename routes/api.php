@@ -36,6 +36,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/charge-invitation', [ChargeController::class, 'chargeInvitation'])->name('charges.chargeInvitation');
         Route::post('/process-charge-invitations/{token}', [ChargeController::class, 'processChargeInvitations'])->name('charges.processChargeInvitations');
         Route::get('/charge-invitations/{email}', [ChargeController::class, 'chargeInvitations'])->name('charges.chargeInvitations');
+        Route::post('/send-payment/{installment}', [ChargeController::class, 'sendPayment'])->name('charges.sendPayment');
+        Route::post('/upload-receipt/{installment}', [ChargeController::class, 'uploadReceipt'])->name('charges.uploadReceipt');
+        Route::post('/get-payments-for-approval/{charge}', [ChargeController::class, 'getPaymentsForApproval'])->name('charges.getPaymentsForApproval');
+
+
     });
     Route::prefix('installments')->middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/{installment_id}/generate-payment', [InstallmentController::class, 'generatePayment'])->name('installments.generatePayment');
