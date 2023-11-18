@@ -9,7 +9,7 @@ class Installment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'value', 'installment_number', 'due_date', 'paid'
+        'value', 'installment_number', 'due_date', 'paid', 'user_id'
     ];
 
     public function charge()

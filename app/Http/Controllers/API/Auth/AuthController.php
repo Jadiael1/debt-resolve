@@ -44,7 +44,7 @@ class AuthController extends Controller
                 ]);
             }
             $user->tokens()->delete();
-            $token = $user->createToken('token-name')->plainTextToken;
+            $token = $user->createToken('login-token')->plainTextToken;
             return response()->json(['access_token' => $token], 200);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
