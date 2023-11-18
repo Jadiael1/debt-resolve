@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Charge;
 use App\Models\ChargeInvitation;
+use App\Models\Installment;
 use App\Models\User;
 use App\Notifications\DefaultNotification;
 use Illuminate\Support\Carbon;
@@ -76,6 +77,26 @@ class ChargeController extends Controller
             return response()->json(['message' => 'Unexpected error when creating resource'], 500);
         }
 
+        $installments = array_map(function ($iterator) use ($charge) {
+            $installment = new Installment();
+            $installment->value = $charge->amount / $charge->installments_number;
+            $installment->installment_number = $iterator;
+            $installment->charge_id = $charge->id;
+            $installment->due_date = Carbon::now()->day($charge->due_day)->addMonths($iterator);
+            return $installment;
+        }, range(1, $charge->installments_number));
+
+        try {
+            DB::beginTransaction();
+            foreach ($installments as $installment) {
+                $installment->save();
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            response()->json(['error' => 'Error occurred while saving models to the database.'], 500);
+        }
+
         return response()->json(['message' => 'Charge successfully created'], 201);
     }
 
@@ -86,7 +107,7 @@ class ChargeController extends Controller
         if ($chargeInvitation && $chargeInvitation->updated_at->diffInDays($currentDate) >= 7) {
             return response()->json(['message' => 'This invite link has expired or does not exist'], 410);
         }
-        if(!$chargeInvitation->is_valid){
+        if (!$chargeInvitation->is_valid) {
             return response()->json(['message' => 'This invitation link has already been used and is no longer valid'], 410);
         }
         $charge = Charge::where('id', $chargeInvitation->charge_id)->first();
