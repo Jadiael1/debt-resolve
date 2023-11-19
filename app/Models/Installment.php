@@ -16,4 +16,9 @@ class Installment extends Model
     {
         return $this->belongsTo(Charge::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

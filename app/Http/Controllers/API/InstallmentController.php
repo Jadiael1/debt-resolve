@@ -8,15 +8,9 @@ use Illuminate\Http\Request;
 
 class InstallmentController extends Controller
 {
-    public function generatePayment($installment_id)
+    public function index()
     {
-        $installment = Installment::findOrFail($installment_id);
-        return response()->json(['message' => 'Pagamento gerado com sucesso']);
-    }
-
-    public function proofUpload($installment_id)
-    {
-        $installment = Installment::findOrFail($installment_id);
-        return response()->json(['message' => 'Comprovante enviado com sucesso']);
+        // return auth()->user()->installments;
+        return Installment::all();
     }
 }

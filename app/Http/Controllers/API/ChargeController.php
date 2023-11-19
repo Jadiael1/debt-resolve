@@ -22,14 +22,9 @@ class ChargeController extends Controller
         return response()->json(['Installments' => $installments]);
     }
 
-
     public function index()
     {
-        $collectors = auth()->user()->collectors;
-        $debtors = auth()->user()->debtors;
-        return ["debtors" => $collectors, "collectors" => $debtors];
-        // $mergedResult = $collectors->merge($debtors);
-        // return $mergedResult;
+        return response()->json(['charges' => Charge::all()]);
     }
 
     public function store(Request $request)
@@ -94,33 +89,10 @@ class ChargeController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            response()->json(['error' => 'Error occurred while saving models to the database.'], 500);
+            return response()->json(['error' => 'Error occurred while saving models to the database.'], 500);
         }
 
         return response()->json(['message' => 'Charge successfully created'], 201);
-    }
-
-    public function processChargeInvitations($token)
-    {
-        $chargeInvitation = ChargeInvitation::where('token', $token)->first();
-        $currentDate = Carbon::now();
-        if ($chargeInvitation && $chargeInvitation->updated_at->diffInDays($currentDate) >= 7) {
-            return response()->json(['message' => 'This invite link has expired or does not exist'], 410);
-        }
-        if (!$chargeInvitation->is_valid) {
-            return response()->json(['message' => 'This invitation link has already been used and is no longer valid'], 410);
-        }
-        $charge = Charge::where('id', $chargeInvitation->charge_id)->first();
-        $side1 = $charge->collector_id === $chargeInvitation->user_id ? 'debtor_id' : ($charge->debtor_id === $chargeInvitation->user_id ? 'collector_id' : '');
-        if ($charge->collector_id && $charge->debtor_id) {
-            return response()->json(['message' => 'It is not possible to participate in this charge, there is already a collector and the debtor'], 409);
-        }
-        $side2 = $side1 == 'collector_id' ? 'debtor_id' : 'collector_id';
-        if ($charge[$side2] === auth()->id()) {
-            return response()->json(['message' => 'You cannot play the role of collector and debtor at the same time in a charge'], 422);
-        }
-        $charge->update([$side1 => auth()->id()]);
-        return response()->json(['message' => 'Congratulations now you participate in this charge'], 200);
     }
 
     public function chargeInvitation(Request $request)
@@ -135,6 +107,7 @@ class ChargeController extends Controller
                 return response()->json(['message' => 'You already participate in this charge!'], 400);
             }
             $token = Str::random(40);
+
             $chargeInvitation = ChargeInvitation::where([
                 ['email', $request->email],
                 ['charge_id', $request->charge_id],
@@ -155,16 +128,51 @@ class ChargeController extends Controller
                     return response()->json(['message' => 'Unexpected error when creating resource'], 500);
                 }
             }
+            // $chargeInvitation->update(['updated_at' => now()]);
             DB::table('charge_invitations')->where('id', $chargeInvitation->id)->update(['updated_at' => DB::raw('CURRENT_TIMESTAMP')]);
             $this->sendChargeInvitationNotification($token, $charge);
             return response()->json(['message' => 'Invitation to register and participate in billing sent successfully'], 200);
         }
     }
 
+    public function processInvitations($token)
+    {
+        $chargeInvitation = ChargeInvitation::where('token', $token)->first();
+        $currentDate = Carbon::now();
+        if ($chargeInvitation && $chargeInvitation->updated_at->diffInDays($currentDate) >= 7) {
+            return response()->json(['message' => 'This invite link has expired or does not exist'], 410);
+        }
+        if (!$chargeInvitation->is_valid) {
+            return response()->json(['message' => 'This invitation link has already been used and is no longer valid'], 410);
+        }
+        $charge = Charge::where('id', $chargeInvitation->charge_id)->first();
+        if ($charge->collector_id && $charge->debtor_id) {
+            return response()->json(['message' => 'It is not possible to participate in this charge, there is already a collector and the debtor'], 409);
+        }
+        $side1 = $charge->collector_id === $chargeInvitation->user_id ? 'debtor_id' : ($charge->debtor_id === $chargeInvitation->user_id ? 'collector_id' : '');
+        $side2 = $side1 == 'collector_id' ? 'debtor_id' : 'collector_id';
+        if ($charge[$side2] === auth()->id()) {
+            return response()->json(['message' => 'You cannot play the role of collector and debtor at the same time in a charge'], 422);
+        }
+        $charge->update([$side1 => auth()->id()]);
+        return response()->json(['message' => 'Congratulations now you participate in this charge'], 200);
+    }
+
     public function chargeInvitations($email)
     {
         $chargeInvitation = ChargeInvitation::where('email', $email)->get();
         return $chargeInvitation;
+    }
+
+    public function getPaymentsForApproval(Request $request, Charge $charge)
+    {
+        $request->validate([
+            'charge_id' => 'required|integer'
+        ]);
+        if ($charge->collector_id !== auth()->id()) {
+            return response()->json(['message' => 'You are not the collector of this charge, so you cannot get payments on approval.'], 403);
+        }
+        return $charge->installments()->where('awaiting_approval', true)->get();
     }
 
     public function uploadReceipt(Installment $installment, Request $request)
@@ -196,25 +204,11 @@ class ChargeController extends Controller
         return response()->json(['message' => 'Proof sent successfully', 'path' => $path], 200);
     }
 
-    public function getPaymentsForApproval(Request $request, Charge $charge)
-    {
-        $request->validate([
-            'charge_id' => 'required|integer'
-        ]);
-        if ($charge->collector_id !== auth()->id()) {
-            return response()->json(['message' => 'You are not the collector of this charge, so you cannot get payments on approval.'], 403);
-        }
-        return $charge->installments()->where('awaiting_approval', true)->get();
-    }
-
     public function sendPayment(Installment $installment, Request $request)
     {
         $request->validate([
             'charge_id' => 'required|integer'
         ]);
-        if (!$installment) {
-            return response()->json(['message' => 'Installment not found'], 404);
-        }
         if ($installment->awaiting_approval) {
             return response()->json(['message' => 'This installment is already under payment approval analysis'], 409);
         }
@@ -227,6 +221,15 @@ class ChargeController extends Controller
         }
         $installment->update(['awaiting_approval' => true]);
         return response()->json(['message' => 'Payment of the installment of the charge sent for analysis successfully'], 200);
+    }
+
+    public function acceptPaymentApprovalByCollector(Request $request, Charge $charge, Installment $installment)
+    {
+        if ($charge->collector_id !== auth()->id()) {
+            return response()->json(['message' => 'You are not the collector of this charge and therefore cannot approve payments for this charge.'], 403);
+        }
+        $installment->update(['paid' => true, 'user_id' => $charge->debtor_id]);
+        return response()->json(['message' => 'payment marked as paid successfully'], 200);
     }
 
     private function sendChargeInvitationNotification($token, $charge)

@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\Auth\EmailVerificationController;
 use App\Http\Controllers\API\Auth\NewPasswordController;
@@ -29,21 +30,25 @@ Route::prefix('v1')->group(function () {
         Route::get('/email/activation-notice', [EmailVerificationController::class, 'notice'])->name('verification.notice');
         Route::get('/unauthorized', [AuthController::class, 'unauthorized'])->middleware(['guest'])->name('login');
     });
+
     Route::prefix('charges')->middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/', [ChargeController::class, 'index'])->name('charges.index');
         Route::post('/', [ChargeController::class, 'store'])->name('charges.store');
         Route::get('/{charge_id}/installments', [ChargeController::class, 'listInstallments'])->name('charges.listInstallments');
-        Route::post('/charge-invitation', [ChargeController::class, 'chargeInvitation'])->name('charges.chargeInvitation');
-        Route::post('/process-charge-invitations/{token}', [ChargeController::class, 'processChargeInvitations'])->name('charges.processChargeInvitations');
-        Route::get('/charge-invitations/{email}', [ChargeController::class, 'chargeInvitations'])->name('charges.chargeInvitations');
-        Route::post('/send-payment/{installment}', [ChargeController::class, 'sendPayment'])->name('charges.sendPayment');
+        Route::post('/invitation', [ChargeController::class, 'chargeInvitation'])->name('charges.chargeInvitation');
+        Route::post('/process-charge-invitations/{token}', [ChargeController::class, 'processInvitations'])->name('charges.processInvitations');
+        Route::get('/invitations/{email}', [ChargeController::class, 'chargeInvitations'])->name('charges.chargeInvitations');
         Route::post('/upload-receipt/{installment}', [ChargeController::class, 'uploadReceipt'])->name('charges.uploadReceipt');
+        Route::post('/send-payment/{installment}', [ChargeController::class, 'sendPayment'])->name('charges.sendPayment');
         Route::post('/get-payments-for-approval/{charge}', [ChargeController::class, 'getPaymentsForApproval'])->name('charges.getPaymentsForApproval');
-
-
+        Route::post('{charge}/installments/{installment}/accept-payment-approval-by-collector/', [ChargeController::class, 'acceptPaymentApprovalByCollector'])->name('charges.acceptPaymentApprovalByCollector');
     });
+
     Route::prefix('installments')->middleware(['auth:sanctum', 'verified'])->group(function () {
-        Route::post('/{installment_id}/generate-payment', [InstallmentController::class, 'generatePayment'])->name('installments.generatePayment');
-        Route::post('/{installment_id}/proof-upload', [InstallmentController::class, 'proofUpload'])->name('installments.proofUpload');
+        Route::get('/', [InstallmentController::class, 'index'])->name('installments.index');
+    });
+
+    Route::prefix('charge-invitation')->middleware(['auth:sanctum', 'verified'])->group(function () {
+
     });
 });
