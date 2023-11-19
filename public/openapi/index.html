@@ -18,7 +18,7 @@
     <script>
         window.onload = function () {
             const ui = SwaggerUIBundle({
-                url: url = "/openapi/swagger.json",
+                url: "/openapi/swagger.json",
                 dom_id: "#swagger-ui",
                 deepLinking: true,
                 presets: [
@@ -28,7 +28,11 @@
                 plugins: [
                     SwaggerUIBundle.plugins.DownloadUrl
                 ],
-                layout: "StandaloneLayout"
+                layout: "StandaloneLayout",
+                onComplete: function () {
+                    const token = localStorage.getItem("token_swagger");
+                    token && ui.preauthorizeApiKey("bearerAuth", token);
+                }
             })
             window.ui = ui
         }

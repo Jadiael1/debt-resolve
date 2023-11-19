@@ -17,7 +17,8 @@ class UserController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/users/installments",
+     *     path="/api/v1/users/installments",
+     *     security={{"bearerAuth": {}}},
      *     summary="List Installments for User",
      *     description="Retrieve a list of installments for the authenticated user",
      *     tags={"Users"},
@@ -55,7 +56,7 @@ class UserController extends Controller
      *     )
      * )
      */
-    public function installmentList()
+    public function installments()
     {
         return response()->json(['status' => 'success', 'message' => 'List of installments for this user', 'data' => ["installments" => auth()->user()->installments]], 200);
     }
@@ -63,7 +64,8 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/users/charges",
+     *     path="/api/v1/users/charges",
+     *     security={{"bearerAuth": {}}},
      *     summary="List Charges associated with User",
      *     description="Retrieve a list of charges associated with the authenticated user",
      *     tags={"Users"},
@@ -109,7 +111,7 @@ class UserController extends Controller
      *     )
      * )
      */
-    public function chargeList()
+    public function charges()
     {
         $collectors = auth()->user()->collectors;
         $debtors = auth()->user()->debtors;
@@ -121,7 +123,8 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/users",
+     *     path="/api/v1/users",
+     *     security={{"bearerAuth": {}}},
      *     summary="List Users",
      *     description="Retrieve a list of all users",
      *     tags={"Users"},
@@ -148,27 +151,16 @@ class UserController extends Controller
      *     )
      * )
      */
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return response()->json(['status' => 'success', 'message' => 'Users successfully listed', 'data' => ["users" => User::all()]], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
 
     /**
      * @OA\Get(
-     *     path="/api/users/{user}",
+     *     path="/api/v1/users/{user}/user",
+     *     security={{"bearerAuth": {}}},
      *     summary="Show User",
      *     description="Show details of a specific user",
      *     tags={"Users"},
@@ -208,27 +200,8 @@ class UserController extends Controller
      *     )
      * )
      */
-    /**
-     * Display the specified resource.
-     */
     public function show(User $user)
     {
         return response()->json(['status' => 'success', 'message' => 'User successfully listed', 'data' => ["user" => $user]], 200);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
     }
 }

@@ -12,14 +12,14 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/auth": {
+        "/api/v1/auth/signup": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Register a new user",
                 "description": "Create a new user and send a verification email.",
-                "operationId": "58f8d3aa285a74976591b317d0b70770",
+                "operationId": "ce2a73b3e7f7e0c8526f047601516f08",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -583,93 +583,14 @@
                 }
             }
         },
-        "/api/v1/charges/{chargeId}/installments": {
-            "get": {
-                "tags": [
-                    "Installments"
-                ],
-                "summary": "List installments for a specific charge",
-                "description": "Retrieve a list of installments associated with a specific charge.",
-                "operationId": "listInstallments",
-                "parameters": [
-                    {
-                        "name": "chargeId",
-                        "in": "path",
-                        "description": "ID of the charge to retrieve installments",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64",
-                            "example": 1
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success: Installments listed successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Installment listing completed successfully"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "Installments": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "$ref": "#/components/schemas/Installment"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Error: Charge not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Charge not found"
-                                        },
-                                        "data": {
-                                            "type": "null"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/charges": {
+        "/api/v1/charges": {
             "get": {
                 "tags": [
                     "Charges"
                 ],
                 "summary": "List all charges",
                 "description": "Returns a list of all charges",
-                "operationId": "81b5d3904f20f2fcbe8a8a78c04e9083",
+                "operationId": "e5a56f95598e083b376960fc46152c08",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -718,7 +639,7 @@
                 ],
                 "summary": "Create a new charge",
                 "description": "Creates a new charge and related installments",
-                "operationId": "89f88278371a750e9f93dce49a668a05",
+                "operationId": "c5bdf89b8c07cf1688a25dcead0550c8",
                 "requestBody": {
                     "description": "Charge data",
                     "required": true,
@@ -893,14 +814,14 @@
                 ]
             }
         },
-        "/charges/{charge}": {
+        "/api/v1/charges/{charge}": {
             "get": {
                 "tags": [
                     "Charges"
                 ],
                 "summary": "Get a specific charge",
                 "description": "Returns a specific charge by ID",
-                "operationId": "9d2fee633254ba9b149005849104a101",
+                "operationId": "602ce8a5af8f810ed36716228dd3a478",
                 "parameters": [
                     {
                         "name": "charge",
@@ -974,14 +895,14 @@
                 ]
             }
         },
-        "/charge-invitations": {
+        "/api/v1/charge-invitations/invitations": {
             "post": {
                 "tags": [
                     "Charge Invitations"
                 ],
                 "summary": "Send charge invitation",
                 "description": "Sends an invitation to participate in a charge",
-                "operationId": "8f49362d1c2d055be15e5c2cedc49149",
+                "operationId": "a65dff9f6cbd831e080d1dc8c1d7c127",
                 "requestBody": {
                     "description": "Charge invitation data",
                     "required": true,
@@ -1128,14 +1049,14 @@
                 ]
             }
         },
-        "/your-endpoint-here/process-invitations/{token}": {
+        "/api/v1/charge-invitations/process-charge-invitations/{token}": {
             "post": {
                 "tags": [
                     "Charge Invitations"
                 ],
                 "summary": "Process Charge Invitations",
                 "description": "Process the charge invitations based on the provided token.",
-                "operationId": "2da93b337eba1d54edd83060d9dc6a43",
+                "operationId": "3aeed32436a4a113814d0afd01038412",
                 "parameters": [
                     {
                         "name": "token",
@@ -1259,40 +1180,25 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/your-endpoint-here/get-payments-for-approval/{charge}": {
+        "/api/v1/charge-invitations/": {
             "get": {
                 "tags": [
-                    "Payments"
+                    "Charge Invitations"
                 ],
-                "summary": "Get Payments for Approval",
-                "description": "Retrieve payments awaiting approval for a particular charge.",
-                "operationId": "49f421ded6490260051eb5f6d810f99e",
-                "parameters": [
-                    {
-                        "name": "charge",
-                        "in": "path",
-                        "description": "ID of the charge",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "charge_id",
-                        "in": "query",
-                        "description": "ID of the charge",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
+                "summary": "List Invitations",
+                "description": "Retrieve a list of all invitations.",
+                "operationId": "d287c38b4e33e953c660a66eb017368e",
                 "responses": {
                     "200": {
-                        "description": "Successfully retrieved payments awaiting approval",
+                        "description": "Invitations listed successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1303,11 +1209,314 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Listing of payments awaiting approval completed successfully"
+                                            "example": "Invitations listed successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "invitations": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/charge-invitations/{chargeinvitation}/charge-invitation": {
+            "get": {
+                "tags": [
+                    "Charge Invitations"
+                ],
+                "summary": "Get Invitation by ID",
+                "description": "Retrieve a specific invitation by its ID.",
+                "operationId": "d47a6ab9325ffafddeb2698b67dce465",
+                "parameters": [
+                    {
+                        "name": "chargeInvitation",
+                        "in": "path",
+                        "description": "ID of the invitation",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invitation found successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invitation found successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "invitation": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/charge-invitations/{email}/email": {
+            "get": {
+                "tags": [
+                    "Charge Invitations"
+                ],
+                "summary": "Get Invitations by Email",
+                "description": "Retrieve invitations by email.",
+                "operationId": "d6300cd9bfec25909b918ccda7a64d93",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Email to search for invitations",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invitations found successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invitations found successfully by email"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "invitation": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/installments": {
+            "get": {
+                "tags": [
+                    "Installments"
+                ],
+                "summary": "List Installments",
+                "description": "Retrieve a list of installments.",
+                "operationId": "f50454fabde6c295db65732550a3dc6d",
+                "responses": {
+                    "200": {
+                        "description": "Installments listed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Installments listed successfully"
                                         },
                                         "data": {
                                             "properties": {
                                                 "installments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/installments/{installment}/installment": {
+            "get": {
+                "tags": [
+                    "Installments"
+                ],
+                "summary": "Show Installment",
+                "description": "Retrieve a specific installment by ID.",
+                "operationId": "b9ff30783d7a46600f618d327775e17c",
+                "parameters": [
+                    {
+                        "name": "installment",
+                        "in": "path",
+                        "description": "ID of the installment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Installment found successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Installment found successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "installment": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Installment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Installment not found"
+                                        },
+                                        "errors": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/installments/charge/{charge_id}/": {
+            "get": {
+                "tags": [
+                    "Installments"
+                ],
+                "summary": "List installments for a specific charge",
+                "description": "Retrieve a list of installments associated with a specific charge.",
+                "operationId": "listInstallments",
+                "parameters": [
+                    {
+                        "name": "charge",
+                        "in": "path",
+                        "description": "ID of the charge to retrieve installments",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Installments listed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Charge installment listing completed successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "Installments": {
                                                     "type": "array",
                                                     "items": {
                                                         "$ref": "#/components/schemas/Installment"
@@ -1322,8 +1531,8 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Forbidden - Not the collector of this charge",
+                    "404": {
+                        "description": "Error: Charge not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1334,7 +1543,10 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "You are not the collector of this charge, so you cannot get payments on approval"
+                                            "example": "Charge not found"
+                                        },
+                                        "data": {
+                                            "type": "null"
                                         }
                                     },
                                     "type": "object"
@@ -1342,17 +1554,22 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/your-endpoint-here/upload-receipt/{installment}": {
+        "/api/v1/installments/upload-receipt/{installment}": {
             "post": {
                 "tags": [
-                    "Receipts"
+                    "Installments"
                 ],
                 "summary": "Upload Receipt",
                 "description": "Upload a receipt image for a specific installment.",
-                "operationId": "0caa334fec1abf9d130ac60623f98d59",
+                "operationId": "504374587a376deff8bca7453907270c",
                 "parameters": [
                     {
                         "name": "installment",
@@ -1480,17 +1697,22 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/your-endpoint-here/send-payment/{installment}": {
+        "/api/v1/installments/send-payment/{installment}": {
             "post": {
                 "tags": [
-                    "Payments"
+                    "Installments"
                 ],
                 "summary": "Send Payment for Approval",
                 "description": "Send payment for approval of a specific installment.",
-                "operationId": "8b306a1552a03dbf7411d18276f9fe6d",
+                "operationId": "e02979493f250985a8e7197c87476da8",
                 "parameters": [
                     {
                         "name": "installment",
@@ -1603,17 +1825,110 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/your-endpoint-here/accept-payment-approval/{charge}/{installment}": {
+        "/api/v1/Installments/get-payments-for-approval/{charge}": {
+            "get": {
+                "tags": [
+                    "Installments"
+                ],
+                "summary": "Get Payments for Approval",
+                "description": "Retrieve payments awaiting approval for a particular charge.",
+                "operationId": "d60936aaa06b49355b379a78b9373220",
+                "parameters": [
+                    {
+                        "name": "charge",
+                        "in": "path",
+                        "description": "ID of the charge",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "charge_id",
+                        "in": "query",
+                        "description": "ID of the charge",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved payments awaiting approval",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successful listing of payments for a given charge under approval"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "installments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Installment"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Not the collector of this charge",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not the collector of this charge, so you cannot get payments on approval"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/installments/{installment}/charge/{charge}/accept-payment-approval-by-collector": {
             "post": {
                 "tags": [
-                    "Payments"
+                    "Installments"
                 ],
                 "summary": "Accept Payment Approval by Collector",
                 "description": "Accept payment approval for a specific installment by the collector.",
-                "operationId": "2f4d435ab308003cc88b92a6c4a948e5",
+                "operationId": "26716fa4b31d16caa6485af45845d81c",
                 "parameters": [
                     {
                         "name": "charge",
@@ -1685,188 +2000,22 @@
                             }
                         }
                     }
-                }
-            }
-        },
-        "/your-endpoint-here/invitations/{email}": {
-            "get": {
-                "tags": [
-                    "Invitations"
-                ],
-                "summary": "Get Invitations by Email",
-                "description": "Retrieve invitations by email.",
-                "operationId": "26e3dbc35cb9550a6ecab8f4ed30f89c",
-                "parameters": [
+                },
+                "security": [
                     {
-                        "name": "email",
-                        "in": "path",
-                        "description": "Email to search for invitations",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "bearerAuth": []
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Invitations found successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Invitations found successfully by email"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "invitation": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
+                ]
             }
         },
-        "/your-endpoint-here/installments": {
-            "get": {
-                "tags": [
-                    "Installments"
-                ],
-                "summary": "List Installments",
-                "description": "Retrieve a list of installments.",
-                "operationId": "3c7a6cc973b08d3da2dc265b22cb87e8",
-                "responses": {
-                    "200": {
-                        "description": "Installments listed successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Installments listed successfully"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "installments": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/your-endpoint-here/installments/{installment}": {
-            "get": {
-                "tags": [
-                    "Installments"
-                ],
-                "summary": "Show Installment",
-                "description": "Retrieve a specific installment by ID.",
-                "operationId": "61ec81b719f5e15f20b3a85c1beac626",
-                "parameters": [
-                    {
-                        "name": "installment",
-                        "in": "path",
-                        "description": "ID of the installment",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Installment found successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Installment found successfully"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "installment": {
-                                                    "type": "object"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Installment not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Installment not found"
-                                        },
-                                        "errors": {
-                                            "type": "null"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/users/installments": {
+        "/api/v1/users/installments": {
             "get": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "List Installments for User",
                 "description": "Retrieve a list of installments for the authenticated user",
-                "operationId": "4378a57faa2e6e4b565bbf311894c448",
+                "operationId": "fbc8633c1e8dac8499c12bf0b3827f00",
                 "responses": {
                     "200": {
                         "description": "List of installments for the user",
@@ -1930,14 +2079,14 @@
                 ]
             }
         },
-        "/api/users/charges": {
+        "/api/v1/users/charges": {
             "get": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "List Charges associated with User",
                 "description": "Retrieve a list of charges associated with the authenticated user",
-                "operationId": "d63d3aeebb5bdfaf829494f218c53249",
+                "operationId": "ea2d0ea0661892dcd0d81d902ebab36c",
                 "responses": {
                     "200": {
                         "description": "List of charges for the user",
@@ -1992,6 +2141,133 @@
                                         "status_code": {
                                             "type": "integer",
                                             "example": 401
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List Users",
+                "description": "Retrieve a list of all users",
+                "operationId": "7270627e71b74db2cd48a7618947b439",
+                "responses": {
+                    "200": {
+                        "description": "Users successfully listed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Users successfully listed"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{user}/user": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Show User",
+                "description": "Show details of a specific user",
+                "operationId": "33571a4e35cbeff4932ce480a5c16d93",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User successfully listed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User successfully listed"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/User"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        },
+                                        "data": {
+                                            "type": "null"
                                         }
                                     },
                                     "type": "object"

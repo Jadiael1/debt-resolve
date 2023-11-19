@@ -13,7 +13,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/auth",
+     *     path="/api/v1/auth/signup",
      *     summary="Register a new user",
      *     description="Create a new user and send a verification email.",
      *     tags={"Auth"},
@@ -144,6 +144,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/v1/auth/logout",
+     *     security={{"bearerAuth": {}}},
      *     summary="User Logout",
      *     description="Logout the authenticated user",
      *     tags={"Auth"},
