@@ -34,13 +34,13 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('charges')->middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/', [ChargeController::class, 'index'])->name('charges.index');
+        Route::get('/{charge}', [ChargeController::class, 'show'])->name('charges.show');
         Route::post('/', [ChargeController::class, 'store'])->name('charges.store');
         Route::get('/{charge_id}/installments', [ChargeController::class, 'listInstallments'])->name('charges.listInstallments');
-        Route::post('/invitation', [ChargeController::class, 'chargeInvitation'])->name('charges.chargeInvitation');
+        Route::post('/invitations', [ChargeController::class, 'chargeInvitation'])->name('charges.chargeInvitation');
         Route::post('/process-charge-invitations/{token}', [ChargeController::class, 'processInvitations'])->name('charges.processInvitations');
-        Route::get('/invitations/{email}', [ChargeController::class, 'chargeInvitations'])->name('charges.chargeInvitations');
-        Route::post('/upload-receipt/{installment}', [ChargeController::class, 'uploadReceipt'])->name('charges.uploadReceipt');
-        Route::post('/send-payment/{installment}', [ChargeController::class, 'sendPayment'])->name('charges.sendPayment');
+        Route::post('/upload-receipt/installments/{installment}', [ChargeController::class, 'uploadReceipt'])->name('charges.uploadReceipt');
+        Route::post('/send-payment/installments/{installment}', [ChargeController::class, 'sendPayment'])->name('charges.sendPayment');
         Route::post('/get-payments-for-approval/{charge}', [ChargeController::class, 'getPaymentsForApproval'])->name('charges.getPaymentsForApproval');
         Route::post('{charge}/installments/{installment}/accept-payment-approval-by-collector/', [ChargeController::class, 'acceptPaymentApprovalByCollector'])->name('charges.acceptPaymentApprovalByCollector');
     });
@@ -54,6 +54,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('charge-invitations')->middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/', [ChargeInvitationController::class, 'index'])->name('charge-invitation.index');
         Route::get('/{chargeInvitation}', [ChargeInvitationController::class, 'show'])->name('charge-invitation.show');
+        Route::get('/email/{email}', [ChargeInvitationController::class, 'getByEmail'])->name('charge-invitation.getByEmail');
     });
 
     Route::prefix('users')->middleware(['auth:sanctum', 'verified'])->group(function () {

@@ -13,7 +13,7 @@ class ChargeInvitationController extends Controller
      */
     public function index()
     {
-        return response()->json(["invitations" => ChargeInvitation::all()]);
+        return response()->json(['status' => 'success', 'message' => 'Invitations listed successfully', 'data' => ['invitations' => ChargeInvitation::all()]], 200);
     }
 
     /**
@@ -29,7 +29,12 @@ class ChargeInvitationController extends Controller
      */
     public function show(ChargeInvitation $chargeInvitation)
     {
-        return response()->json(["invitation" => $chargeInvitation]);
+        return response()->json(['status' => 'success', 'message' => 'Invitations successfully found', 'data' => ['invitation' => $chargeInvitation]], 200);
+    }
+
+    public function getByEmail(string $email){
+        $chargeInvitation = ChargeInvitation::where('email', $email)->get();
+        return response()->json(['status' => 'success', 'message' => 'Invitations successfully found by email', 'data' => ['invitation' => $chargeInvitation]], 200);
     }
 
     /**

@@ -28,9 +28,7 @@ class NewPasswordController extends Controller
         );
 
         if ($status == Password::RESET_LINK_SENT) {
-            return [
-                'status' => __($status)
-            ];
+            return response()->json(['status' => 'success', 'message' => __($status), 'data' => null], 200);
         }
 
         try {
@@ -38,7 +36,7 @@ class NewPasswordController extends Controller
                 'email' => [trans($status)],
             ]);
         } catch (ValidationException $e) {
-            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+            return response()->json(['status' => 'error', 'message' => 'Validation error', 'errors' => $e->errors()], 422);
         }
     }
 
@@ -64,14 +62,9 @@ class NewPasswordController extends Controller
         );
 
         if ($status == Password::PASSWORD_RESET) {
-            return response([
-                'message' => 'Password reset successfully'
-            ]);
+            return response()->json(['status' => 'success', 'message' => 'Password reset successfully', 'data' => null], 200);
         }
-
-        return response([
-            'message' => __($status)
-        ], 500);
+        return response()->json(['status' => 'error', 'message' => __($status), 'errors' => null], 500);
     }
 
     private function sendNotificationPasswordHasBeenReseted($email, $token)

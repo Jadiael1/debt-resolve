@@ -24,9 +24,9 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
             $user->sendEmailVerificationNotification();
-            return response()->json(['message' => 'User registered successfully. Please verify your email.'], 201);
+            return response()->json(['status' => 'success', 'message' => 'User registered successfully. Please verify your email.', 'data' => $user], 201);
         } catch (ValidationException $e) {
-            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+            return response()->json(['status' => 'error', 'message' => 'Validation error', 'errors' => $e->errors()], 422);
         }
     }
 
@@ -44,22 +44,22 @@ class AuthController extends Controller
                 ]);
             }
             $user->tokens()->delete();
-            $token = $user->createToken('login-token')->plainTextToken;
-            return response()->json(['access_token' => $token], 200);
+            $token = $user->createToken('login-token');
+            return response()->json(['status' => 'success', 'message' => 'login successful', 'data' => ['user' => $user, 'token' => $token->plainTextToken, 'token_type' => 'Bearer']], 200);
         } catch (ValidationException $e) {
-            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+            return response()->json(['status' => 'error', 'message' => 'Validation error', 'errors' => $e->errors()], 422);
+
         }
     }
 
     public function unauthorized()
     {
-        return response()->json(['message' => 'unauthorized', 'errors' => null], 401);
+        return response()->json(['status' => 'error', 'message' => 'unauthorized', 'errors' => null], 401);
     }
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-
-        return response()->json(['message' => 'Logged out'], 200);
+        return response()->json(['status' => 'success', 'message' => 'Logged out', 'data' => null], 200);
     }
 }
