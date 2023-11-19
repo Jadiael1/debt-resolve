@@ -5,6 +5,8 @@ use App\Http\Controllers\API\Auth\EmailVerificationController;
 use App\Http\Controllers\API\Auth\NewPasswordController;
 use App\Http\Controllers\API\ChargeController;
 use App\Http\Controllers\API\InstallmentController;
+use App\Http\Controllers\ChargeInvitationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,9 +48,18 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('installments')->middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/', [InstallmentController::class, 'index'])->name('installments.index');
+        Route::get('/{installment}', [InstallmentController::class, 'show'])->name('installments.show');
+
     });
 
-    Route::prefix('charge-invitation')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::prefix('charge-invitations')->middleware(['auth:sanctum', 'verified'])->group(function () {
+        Route::get('/', [ChargeInvitationController::class, 'index'])->name('charge-invitation.index');
+        Route::get('/{chargeInvitation}', [ChargeInvitationController::class, 'show'])->name('charge-invitation.show');
+    });
 
+    Route::prefix('users')->middleware(['auth:sanctum', 'verified'])->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('users.index');
+        Route::get('/installments', [UserController::class, 'installmentList'])->name('users.installmentList');
+        Route::get('/charges', [UserController::class, 'chargeList'])->name('users.chargeList');
     });
 });

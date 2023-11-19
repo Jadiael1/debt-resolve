@@ -9,16 +9,16 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
 
-    public function installmlentList()
+    public function installmentList()
     {
-        return auth()->user()->installments;
+        return response()->json(["installments" => auth()->user()->installments], 200);
     }
 
     public function chargeList()
     {
         $collectors = auth()->user()->collectors;
         $debtors = auth()->user()->debtors;
-        return ["debtors" => $collectors, "collectors" => $debtors];
+        return response()->json(["debtors" => $collectors, "collectors" => $debtors], 200);
         // $mergedResult = $collectors->merge($debtors);
         // return $mergedResult;
 
@@ -29,7 +29,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(["users" => User::all()], 200);
     }
 
     /**
