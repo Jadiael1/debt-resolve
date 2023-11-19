@@ -1,0 +1,2203 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "DebtResolve API",
+        "contact": {
+            "email": "jadiael@hotmail.com.br"
+        },
+        "license": {
+            "name": "CC-BY-NC",
+            "url": "https://creativecommons.org/licenses/by-nc/4.0/"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "description": "Create a new user and send a verification email.",
+                "operationId": "58f8d3aa285a74976591b317d0b70770",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully. A verification email has been sent.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully. Please verify your email."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": [
+                                                    "The name field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/signin": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User Sign-in",
+                "description": "Authenticate user with email and password",
+                "operationId": "e81f7baffc8468b9d2c1e33bb2cc2c3b",
+                "requestBody": {
+                    "description": "User credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "login successful"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/User"
+                                                },
+                                                "token": {
+                                                    "description": "Access token",
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+                                                },
+                                                "token_type": {
+                                                    "description": "Token type",
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "description": "Validation errors",
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "The provided credentials are incorrect."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User Logout",
+                "description": "Logout the authenticated user",
+                "operationId": "175a731bf3a114ad4943707eebd8cdfc",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/email/verify/{user_id}/{hash}": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify Email Address",
+                "description": "Verify the user's email address using the provided ID and hash",
+                "operationId": "e277986e32b578605a2d4174fce8d145",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "path",
+                        "description": "Email verification hash",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email verified successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email verified successfully"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Error when checking email or verification failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error when checking email"
+                                        },
+                                        "errors": {
+                                            "type": "null",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/email/resend-activation-link": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Resend Activation Link",
+                "description": "Resend the activation email link to the user for email verification",
+                "operationId": "ff4b6438744d9edbadc7e8d667c8f067",
+                "responses": {
+                    "200": {
+                        "description": "Activation email sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Activation email sent, check your inbox or junk email"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Registration is already activated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Your registration is already activated"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send reset password link",
+                "description": "Send a reset password link to the user's email.",
+                "operationId": "forgotPassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: Reset password link sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Reset password link sent successfully"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error: Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "The email field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset user's password",
+                "description": "Reset user's password using the reset password token.",
+                "operationId": "resetPassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "reset-token"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newpassword"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newpassword"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: Password reset successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successfully"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error: Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        },
+                                        "errors": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/charges/{chargeId}/installments": {
+            "get": {
+                "tags": [
+                    "Installments"
+                ],
+                "summary": "List installments for a specific charge",
+                "description": "Retrieve a list of installments associated with a specific charge.",
+                "operationId": "listInstallments",
+                "parameters": [
+                    {
+                        "name": "chargeId",
+                        "in": "path",
+                        "description": "ID of the charge to retrieve installments",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Installments listed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Installment listing completed successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "Installments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Installment"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error: Charge not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Charge not found"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/charges": {
+            "get": {
+                "tags": [
+                    "Charges"
+                ],
+                "summary": "List all charges",
+                "description": "Returns a list of all charges",
+                "operationId": "81b5d3904f20f2fcbe8a8a78c04e9083",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "description": "Message about the operation status",
+                                            "type": "string",
+                                            "example": "Charge listing completed successfully"
+                                        },
+                                        "data": {
+                                            "description": "Data containing the list of charges",
+                                            "properties": {
+                                                "charges": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Charge"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Charges"
+                ],
+                "summary": "Create a new charge",
+                "description": "Creates a new charge and related installments",
+                "operationId": "89f88278371a750e9f93dce49a668a05",
+                "requestBody": {
+                    "description": "Charge data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "amount",
+                                    "installments_number",
+                                    "due_day",
+                                    "collector_id",
+                                    "debtor_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the charge",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description of the charge",
+                                        "type": "string"
+                                    },
+                                    "amount": {
+                                        "description": "Total debt amount",
+                                        "type": "integer"
+                                    },
+                                    "installments_number": {
+                                        "description": "Number of installments",
+                                        "type": "integer"
+                                    },
+                                    "due_day": {
+                                        "description": "Due day",
+                                        "type": "integer"
+                                    },
+                                    "collector_id": {
+                                        "description": "Collector user ID",
+                                        "type": "integer"
+                                    },
+                                    "debtor_id": {
+                                        "description": "Debtor user ID",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Charge successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "description": "Message about the operation status",
+                                            "type": "string",
+                                            "example": "Charge successfully created"
+                                        },
+                                        "data": {
+                                            "description": "Data containing the created charge and its installments",
+                                            "properties": {
+                                                "charge": {
+                                                    "$ref": "#/components/schemas/Charge"
+                                                },
+                                                "installments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Installment"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "description": "Message about the error",
+                                            "type": "string",
+                                            "example": "You need to choose whether you are the collector or the debtor of the charge"
+                                        },
+                                        "errors": {
+                                            "description": "Detailed error messages",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Charge already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "description": "Message about the error",
+                                            "type": "string",
+                                            "example": "This charge already exists"
+                                        },
+                                        "errors": {
+                                            "description": "Detailed error messages",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error when creating resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "description": "Message about the error",
+                                            "type": "string",
+                                            "example": "Unexpected error when creating resource"
+                                        },
+                                        "errors": {
+                                            "description": "Detailed error messages",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/charges/{charge}": {
+            "get": {
+                "tags": [
+                    "Charges"
+                ],
+                "summary": "Get a specific charge",
+                "description": "Returns a specific charge by ID",
+                "operationId": "9d2fee633254ba9b149005849104a101",
+                "parameters": [
+                    {
+                        "name": "charge",
+                        "in": "path",
+                        "description": "ID of the charge to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "description": "Message about the operation status",
+                                            "type": "string",
+                                            "example": "Charge found successfully"
+                                        },
+                                        "data": {
+                                            "description": "Data containing the specific charge",
+                                            "properties": {
+                                                "charge": {
+                                                    "$ref": "#/components/schemas/Charge"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Charge not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "description": "Message about the error",
+                                            "type": "string",
+                                            "example": "Charge not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/charge-invitations": {
+            "post": {
+                "tags": [
+                    "Charge Invitations"
+                ],
+                "summary": "Send charge invitation",
+                "description": "Sends an invitation to participate in a charge",
+                "operationId": "8f49362d1c2d055be15e5c2cedc49149",
+                "requestBody": {
+                    "description": "Charge invitation data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "charge_id"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Email of the invitee",
+                                        "type": "string"
+                                    },
+                                    "charge_id": {
+                                        "description": "ID of the charge",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Invitation sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "description": "Message about the operation status",
+                                            "type": "string",
+                                            "example": "Invitation to register and participate in billing sent successfully"
+                                        },
+                                        "data": {
+                                            "description": "Data containing the charge and invitation details",
+                                            "properties": {
+                                                "charge": {
+                                                    "$ref": "#/components/schemas/Charge"
+                                                },
+                                                "chargeInvitation": {
+                                                    "$ref": "#/components/schemas/ChargeInvitation"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - User already participates in this charge",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "description": "Message about the error",
+                                            "type": "string",
+                                            "example": "You already participate in this charge"
+                                        },
+                                        "errors": {
+                                            "description": "Detailed error messages",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Invitation limit for this email and billing exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "description": "Message about the error",
+                                            "type": "string",
+                                            "example": "Invitation limit for this email and billing exceeded. Wait a week before sending a new invitation"
+                                        },
+                                        "errors": {
+                                            "description": "Detailed error messages",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error when creating resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Status of the response",
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "description": "Message about the error",
+                                            "type": "string",
+                                            "example": "Unexpected error when creating resource"
+                                        },
+                                        "errors": {
+                                            "description": "Detailed error messages",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/your-endpoint-here/process-invitations/{token}": {
+            "post": {
+                "tags": [
+                    "Charge Invitations"
+                ],
+                "summary": "Process Charge Invitations",
+                "description": "Process the charge invitations based on the provided token.",
+                "operationId": "2da93b337eba1d54edd83060d9dc6a43",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "Token associated with the charge invitation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful participation in the charge",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Congratulations! Now you participate in this charge"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "charge": {
+                                                    "$ref": "#/components/schemas/Charge"
+                                                },
+                                                "chargeInvitation": {
+                                                    "$ref": "#/components/schemas/ChargeInvitation"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "410": {
+                        "description": "Expired or invalid invitation link",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This invite link has expired or does not exist"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Unable to participate in the charge",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "It is not possible to participate in this charge"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid request - trying to play both collector and debtor roles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You cannot play the role of collector and debtor at the same time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unexpected error occurred when processing the invitation"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/your-endpoint-here/get-payments-for-approval/{charge}": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Get Payments for Approval",
+                "description": "Retrieve payments awaiting approval for a particular charge.",
+                "operationId": "49f421ded6490260051eb5f6d810f99e",
+                "parameters": [
+                    {
+                        "name": "charge",
+                        "in": "path",
+                        "description": "ID of the charge",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "charge_id",
+                        "in": "query",
+                        "description": "ID of the charge",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved payments awaiting approval",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Listing of payments awaiting approval completed successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "installments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Installment"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Not the collector of this charge",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not the collector of this charge, so you cannot get payments on approval"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/your-endpoint-here/upload-receipt/{installment}": {
+            "post": {
+                "tags": [
+                    "Receipts"
+                ],
+                "summary": "Upload Receipt",
+                "description": "Upload a receipt image for a specific installment.",
+                "operationId": "0caa334fec1abf9d130ac60623f98d59",
+                "parameters": [
+                    {
+                        "name": "installment",
+                        "in": "path",
+                        "description": "ID of the installment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Receipt image to upload",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image": {
+                                        "description": "Receipt image file (JPEG, PNG, JPG, GIF - Max 2MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "charge_id": {
+                                        "description": "ID of the charge",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Receipt uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Proof sent successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "path": {
+                                                    "type": "string",
+                                                    "example": "/path/to/uploaded/receipt"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Installment already under payment approval analysis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This installment is already under payment approval analysis"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - You cannot send payment for an installment of a charge for which you are not the debtor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You cannot send payment for an installment of a charge for which you are not the debtor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity - Missing or invalid parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": "{ 'image': ['The image field is required.'] }"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/your-endpoint-here/send-payment/{installment}": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Send Payment for Approval",
+                "description": "Send payment for approval of a specific installment.",
+                "operationId": "8b306a1552a03dbf7411d18276f9fe6d",
+                "parameters": [
+                    {
+                        "name": "installment",
+                        "in": "path",
+                        "description": "ID of the installment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Request body with charge ID",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "charge_id": {
+                                        "description": "ID of the charge",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment sent for approval successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment of the installment of the charge sent for analysis successfully"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - You cannot send payment for an installment of a charge for which you are not the debtor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You cannot send payment for an installment of a charge for which you are not the debtor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - This installment is already under payment approval analysis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This installment is already under payment approval analysis"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity - Before sending the payment for analysis you need to send proof of payment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Before sending the payment for analysis you need to send proof of payment"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/your-endpoint-here/accept-payment-approval/{charge}/{installment}": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Accept Payment Approval by Collector",
+                "description": "Accept payment approval for a specific installment by the collector.",
+                "operationId": "2f4d435ab308003cc88b92a6c4a948e5",
+                "parameters": [
+                    {
+                        "name": "charge",
+                        "in": "path",
+                        "description": "ID of the charge",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "installment",
+                        "in": "path",
+                        "description": "ID of the installment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Request body",
+                    "required": false,
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment marked as paid successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment marked as paid successfully"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - You are not the collector of this charge and therefore cannot approve payments for this charge",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not the collector of this charge and therefore cannot approve payments for this charge"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/your-endpoint-here/invitations/{email}": {
+            "get": {
+                "tags": [
+                    "Invitations"
+                ],
+                "summary": "Get Invitations by Email",
+                "description": "Retrieve invitations by email.",
+                "operationId": "26e3dbc35cb9550a6ecab8f4ed30f89c",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Email to search for invitations",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invitations found successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invitations found successfully by email"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "invitation": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/your-endpoint-here/installments": {
+            "get": {
+                "tags": [
+                    "Installments"
+                ],
+                "summary": "List Installments",
+                "description": "Retrieve a list of installments.",
+                "operationId": "3c7a6cc973b08d3da2dc265b22cb87e8",
+                "responses": {
+                    "200": {
+                        "description": "Installments listed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Installments listed successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "installments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/your-endpoint-here/installments/{installment}": {
+            "get": {
+                "tags": [
+                    "Installments"
+                ],
+                "summary": "Show Installment",
+                "description": "Retrieve a specific installment by ID.",
+                "operationId": "61ec81b719f5e15f20b3a85c1beac626",
+                "parameters": [
+                    {
+                        "name": "installment",
+                        "in": "path",
+                        "description": "ID of the installment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Installment found successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Installment found successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "installment": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Installment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Installment not found"
+                                        },
+                                        "errors": {
+                                            "type": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/installments": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List Installments for User",
+                "description": "Retrieve a list of installments for the authenticated user",
+                "operationId": "4378a57faa2e6e4b565bbf311894c448",
+                "responses": {
+                    "200": {
+                        "description": "List of installments for the user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "List of installments for this user"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "installments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Installment"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        },
+                                        "errors": {
+                                            "type": "null"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 401
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users/charges": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List Charges associated with User",
+                "description": "Retrieve a list of charges associated with the authenticated user",
+                "operationId": "d63d3aeebb5bdfaf829494f218c53249",
+                "responses": {
+                    "200": {
+                        "description": "List of charges for the user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Charges associated with this user"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "debtors": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                },
+                                                "collectors": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        },
+                                        "errors": {
+                                            "type": "null"
+                                        },
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 401
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Charge": {
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the charge",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Name of the charge",
+                        "type": "string",
+                        "example": "Monthly rent"
+                    },
+                    "description": {
+                        "description": "Description of the charge",
+                        "type": "string",
+                        "example": "Rent payment for the month"
+                    },
+                    "amount": {
+                        "description": "Total amount of the charge",
+                        "type": "number",
+                        "example": 500
+                    },
+                    "installments_number": {
+                        "description": "Number of installments for the charge",
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "due_day": {
+                        "description": "Due day for payment",
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "collector_id": {
+                        "description": "ID of the user who is the collector for this charge",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "debtor_id": {
+                        "description": "ID of the user who is the debtor for this charge",
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "collector": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "debtor": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "installments": {
+                        "description": "List of installments associated with this charge",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Installment"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ChargeInvitation": {
+                "title": "Charge Invitation",
+                "description": "Charge Invitation model",
+                "properties": {
+                    "id": {
+                        "description": "Charge Invitation ID",
+                        "type": "integer"
+                    },
+                    "email": {
+                        "description": "Email of the invitee",
+                        "type": "string"
+                    },
+                    "token": {
+                        "description": "Invitation token",
+                        "type": "string"
+                    },
+                    "charge_id": {
+                        "description": "ID of the associated charge",
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "description": "ID of the inviting user",
+                        "type": "integer"
+                    },
+                    "is_valid": {
+                        "description": "Indicates whether the invitation is valid",
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "Installment": {
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the installment",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "value": {
+                        "description": "Value of the installment",
+                        "type": "number",
+                        "example": 100
+                    },
+                    "installment_number": {
+                        "description": "Number of the installment",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "due_date": {
+                        "description": "Due date for payment",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-11-30"
+                    },
+                    "paid": {
+                        "description": "Indicates if the installment is paid or not",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "user_id": {
+                        "description": "ID of the user associated with the installment",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "awaiting_approval": {
+                        "description": "Indicates if the installment is awaiting approval",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "payment_proof": {
+                        "description": "URL or path to the payment proof file",
+                        "type": "string",
+                        "example": "https://example.com/payment-proof.jpg"
+                    },
+                    "charge": {
+                        "$ref": "#/components/schemas/Charge"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "description": "User ID",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "User's name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "email_verified_at": {
+                        "description": "Date/time when email was verified",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "description": "Date/time of user creation",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Date/time of user update",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "Bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Users",
+            "description": "API Endpoints for Users"
+        }
+    ]
+}

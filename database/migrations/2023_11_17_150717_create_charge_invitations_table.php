@@ -32,6 +32,7 @@ return new class extends Migration
     {
         Schema::table('charge_invitations', function (Blueprint $table) {
             $table->dropForeign('charge_invitations_charge_id_foreign');
+            $table->dropForeign('charge_invitations_user_id_foreign');
         });
         Schema::dropIfExists('charge_invitations');
     }

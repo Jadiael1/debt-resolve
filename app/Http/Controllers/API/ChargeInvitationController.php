@@ -9,6 +9,32 @@ use Illuminate\Http\Request;
 class ChargeInvitationController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/your-endpoint-here/invitations",
+     *     summary="List Invitations",
+     *     description="Retrieve a list of all invitations.",
+     *     tags={"Invitations"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Invitations listed successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Invitations listed successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="invitations",
+     *                     type="array",
+     *                     @OA\Items(type="object")
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -24,15 +50,86 @@ class ChargeInvitationController extends Controller
         //
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/your-endpoint-here/invitations/{chargeInvitation}",
+     *     summary="Get Invitation by ID",
+     *     description="Retrieve a specific invitation by its ID.",
+     *     tags={"Invitations"},
+     *     @OA\Parameter(
+     *         name="chargeInvitation",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the invitation",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Invitation found successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Invitation found successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="invitation",
+     *                     type="object"
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
     /**
      * Display the specified resource.
      */
-    public function show(ChargeInvitation $chargeInvitation)
+    public function show(int $chargeInvitation)
     {
+        $chargeInvitation = \App\Models\ChargeInvitation::where('id', $chargeInvitation)->first();
         return response()->json(['status' => 'success', 'message' => 'Invitations successfully found', 'data' => ['invitation' => $chargeInvitation]], 200);
     }
 
-    public function getByEmail(string $email){
+
+    /**
+     * @OA\Get(
+     *     path="/your-endpoint-here/invitations/{email}",
+     *     summary="Get Invitations by Email",
+     *     description="Retrieve invitations by email.",
+     *     tags={"Invitations"},
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="path",
+     *         required=true,
+     *         description="Email to search for invitations",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Invitations found successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Invitations found successfully by email"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="invitation",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object"
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function getByEmail(string $email)
+    {
         $chargeInvitation = ChargeInvitation::where('email', $email)->get();
         return response()->json(['status' => 'success', 'message' => 'Invitations successfully found by email', 'data' => ['invitation' => $chargeInvitation]], 200);
     }

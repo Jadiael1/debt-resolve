@@ -17,6 +17,42 @@ use stdClass;
 
 class NewPasswordController extends Controller
 {
+    /**
+     * Send a reset password link to the user's email.
+     *
+     * @OA\Post(
+     *      path="/api/v1/auth/forgot-password",
+     *      operationId="forgotPassword",
+     *      tags={"Auth"},
+     *      summary="Send reset password link",
+     *      description="Send a reset password link to the user's email.",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"email"},
+     *              @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success: Reset password link sent successfully",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Reset password link sent successfully"),
+     *              @OA\Property(property="data", type="null"),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Error: Validation failed",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="string", example="error"),
+     *              @OA\Property(property="message", type="string", example="Validation error"),
+     *              @OA\Property(property="errors", type="object", example={"email": {"The email field is required."}}),
+     *          ),
+     *      ),
+     * )
+     */
     public function forgotPassword(Request $request)
     {
         $request->validate([
@@ -40,6 +76,45 @@ class NewPasswordController extends Controller
         }
     }
 
+    /**
+     * Reset user's password using the reset password token.
+     *
+     * @OA\Post(
+     *      path="/api/v1/auth/reset-password",
+     *      operationId="resetPassword",
+     *      tags={"Auth"},
+     *      summary="Reset user's password",
+     *      description="Reset user's password using the reset password token.",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"token", "email", "password", "password_confirmation"},
+     *              @OA\Property(property="token", type="string", example="reset-token"),
+     *              @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *              @OA\Property(property="password", type="string", format="password", example="newpassword"),
+     *              @OA\Property(property="password_confirmation", type="string", format="password", example="newpassword"),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success: Password reset successfully",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Password reset successfully"),
+     *              @OA\Property(property="data", type="null"),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Error: Internal server error",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="string", example="error"),
+     *              @OA\Property(property="message", type="string", example="Internal server error"),
+     *              @OA\Property(property="errors", type="null"),
+     *          ),
+     *      ),
+     * )
+     */
     public function resetPassword(Request $request)
     {
         $request->validate([

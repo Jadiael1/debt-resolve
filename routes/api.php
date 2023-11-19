@@ -52,14 +52,15 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::prefix('charge-invitations')->middleware(['auth:sanctum', 'verified'])->group(function () {
-        Route::get('/', [ChargeInvitationController::class, 'index'])->name('charge-invitation.index');
-        Route::get('/{chargeInvitation}', [ChargeInvitationController::class, 'show'])->name('charge-invitation.show');
-        Route::get('/email/{email}', [ChargeInvitationController::class, 'getByEmail'])->name('charge-invitation.getByEmail');
+        Route::get('/', [ChargeInvitationController::class, 'index'])->name('charge-invitations.index');
+        Route::get('/{chargeinvitation}', [ChargeInvitationController::class, 'show'])->name('charge-invitations.show');
+        Route::get('/email/{email}', [ChargeInvitationController::class, 'getByEmail'])->name('charge-invitations.getByEmail');
     });
 
     Route::prefix('users')->middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('users.index');
-        Route::get('/installments', [UserController::class, 'installmentList'])->name('users.installmentList');
-        Route::get('/charges', [UserController::class, 'chargeList'])->name('users.chargeList');
+        Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
+        Route::get('/installments/list', [UserController::class, 'installmentList'])->name('users.installmentList');
+        Route::get('/charges/list', [UserController::class, 'chargeList'])->name('users.chargeList');
     });
 });

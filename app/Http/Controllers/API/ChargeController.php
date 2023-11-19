@@ -15,6 +15,50 @@ use Illuminate\Support\Str;
 
 class ChargeController extends Controller
 {
+    /**
+     * List installments for a specific charge.
+     *
+     * @OA\Get(
+     *      path="/api/v1/charges/{chargeId}/installments",
+     *      operationId="listInstallments",
+     *      tags={"Installments"},
+     *      summary="List installments for a specific charge",
+     *      description="Retrieve a list of installments associated with a specific charge.",
+     *      @OA\Parameter(
+     *          name="chargeId",
+     *          in="path",
+     *          required=true,
+     *          description="ID of the charge to retrieve installments",
+     *          @OA\Schema(
+     *              type="integer",
+     *              format="int64",
+     *              example=1
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success: Installments listed successfully",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Installment listing completed successfully"),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="Installments", type="array",
+     *                      @OA\Items(ref="#/components/schemas/Installment")
+     *                  )
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Error: Charge not found",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="string", example="error"),
+     *              @OA\Property(property="message", type="string", example="Charge not found"),
+     *              @OA\Property(property="data", type="null"),
+     *          ),
+     *      ),
+     * )
+     */
     public function listInstallments($chargeId)
     {
         $charge = Charge::findOrFail($chargeId);
@@ -22,16 +66,203 @@ class ChargeController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Installment listing completed successfully', 'data' => ['Installments' => $installments]], 200);
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/charges",
+     *     summary="List all charges",
+     *     description="Returns a list of all charges",
+     *     tags={"Charges"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 description="Status of the response",
+     *                 example="success"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Message about the operation status",
+     *                 example="Charge listing completed successfully"
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 description="Data containing the list of charges",
+     *                 @OA\Property(
+     *                     property="charges",
+     *                     type="array",
+     *                     @OA\Items(ref="#/components/schemas/Charge")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function index()
     {
         return response()->json(['status' => 'success', 'message' => 'Charge listing completed successfully', 'data' => ['charges' => Charge::all()]], 200);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/charges/{charge}",
+     *     summary="Get a specific charge",
+     *     description="Returns a specific charge by ID",
+     *     tags={"Charges"},
+     *     @OA\Parameter(
+     *         name="charge",
+     *         in="path",
+     *         description="ID of the charge to retrieve",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 description="Status of the response",
+     *                 example="success"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Message about the operation status",
+     *                 example="Charge found successfully"
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 description="Data containing the specific charge",
+     *                 @OA\Property(
+     *                     property="charge",
+     *                     ref="#/components/schemas/Charge"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Charge not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 description="Status of the response",
+     *                 example="error"
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Message about the error",
+     *                 example="Charge not found"
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function show(Charge $charge)
     {
         return response()->json(['status' => 'success', 'message' => 'Charge found successfully', 'data' => ['charge' => $charge]], 200);
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/charges",
+     *     summary="Create a new charge",
+     *     description="Creates a new charge and related installments",
+     *     tags={"Charges"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Charge data",
+     *         @OA\JsonContent(
+     *             required={"name", "description", "amount", "installments_number", "due_day", "collector_id", "debtor_id"},
+     *             @OA\Property(property="name", type="string", description="Name of the charge"),
+     *             @OA\Property(property="description", type="string", description="Description of the charge"),
+     *             @OA\Property(property="amount", type="integer", description="Total debt amount"),
+     *             @OA\Property(property="installments_number", type="integer", description="Number of installments"),
+     *             @OA\Property(property="due_day", type="integer", description="Due day"),
+     *             @OA\Property(property="collector_id", type="integer", description="Collector user ID"),
+     *             @OA\Property(property="debtor_id", type="integer", description="Debtor user ID")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Charge successfully created",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", description="Status of the response", example="success"),
+     *             @OA\Property(property="message", type="string", description="Message about the operation status", example="Charge successfully created"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 description="Data containing the created charge and its installments",
+     *                 @OA\Property(
+     *                     property="charge",
+     *                     ref="#/components/schemas/Charge"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="installments",
+     *                     type="array",
+     *                     @OA\Items(ref="#/components/schemas/Installment")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", description="Status of the response", example="error"),
+     *             @OA\Property(property="message", type="string", description="Message about the error", example="You need to choose whether you are the collector or the debtor of the charge"),
+     *             @OA\Property(property="errors", type="object", description="Detailed error messages")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Conflict - Charge already exists",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", description="Status of the response", example="error"),
+     *             @OA\Property(property="message", type="string", description="Message about the error", example="This charge already exists"),
+     *             @OA\Property(property="errors", type="object", description="Detailed error messages")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Unexpected error when creating resource",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", description="Status of the response", example="error"),
+     *             @OA\Property(property="message", type="string", description="Message about the error", example="Unexpected error when creating resource"),
+     *             @OA\Property(property="errors", type="object", description="Detailed error messages")
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -96,9 +327,76 @@ class ChargeController extends Controller
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => 'Error occurred while saving models to the database.', 'errors' => null], 500);
         }
-        return response()->json(['status' => 'success', 'message' => 'Charge successfully created', 'data' => ['charge' => $charge, 'installments' => $installments]], 201);
+        return response()->json(['status' => 'success', 'message' => 'Charge successfully created', 'data' => ['charge' => $charge]], 201);
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/charge-invitations",
+     *     summary="Send charge invitation",
+     *     description="Sends an invitation to participate in a charge",
+     *     tags={"Charge Invitations"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Charge invitation data",
+     *         @OA\JsonContent(
+     *             required={"email", "charge_id"},
+     *             @OA\Property(property="email", type="string", description="Email of the invitee"),
+     *             @OA\Property(property="charge_id", type="integer", description="ID of the charge")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Invitation sent successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", description="Status of the response", example="success"),
+     *             @OA\Property(property="message", type="string", description="Message about the operation status", example="Invitation to register and participate in billing sent successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 description="Data containing the charge and invitation details",
+     *                 @OA\Property(property="charge", ref="#/components/schemas/Charge"),
+     *                 @OA\Property(property="chargeInvitation", ref="#/components/schemas/ChargeInvitation")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request - User already participates in this charge",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", description="Status of the response", example="error"),
+     *             @OA\Property(property="message", type="string", description="Message about the error", example="You already participate in this charge"),
+     *             @OA\Property(property="errors", type="object", description="Detailed error messages")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=429,
+     *         description="Too Many Requests - Invitation limit for this email and billing exceeded",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", description="Status of the response", example="error"),
+     *             @OA\Property(property="message", type="string", description="Message about the error", example="Invitation limit for this email and billing exceeded. Wait a week before sending a new invitation"),
+     *             @OA\Property(property="errors", type="object", description="Detailed error messages")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Unexpected error when creating resource",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", description="Status of the response", example="error"),
+     *             @OA\Property(property="message", type="string", description="Message about the error", example="Unexpected error when creating resource"),
+     *             @OA\Property(property="errors", type="object", description="Detailed error messages")
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function chargeInvitation(Request $request)
     {
         $request->validate([
@@ -139,6 +437,73 @@ class ChargeController extends Controller
         }
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/your-endpoint-here/process-invitations/{token}",
+     *     summary="Process Charge Invitations",
+     *     description="Process the charge invitations based on the provided token.",
+     *     tags={"Charge Invitations"},
+     *     @OA\Parameter(
+     *         name="token",
+     *         in="path",
+     *         required=true,
+     *         description="Token associated with the charge invitation",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful participation in the charge",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Congratulations! Now you participate in this charge"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="charge", type="object", ref="#/components/schemas/Charge"),
+     *                 @OA\Property(property="chargeInvitation", type="object", ref="#/components/schemas/ChargeInvitation")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=410,
+     *         description="Expired or invalid invitation link",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="This invite link has expired or does not exist")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Unable to participate in the charge",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="It is not possible to participate in this charge")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid request - trying to play both collector and debtor roles",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="You cannot play the role of collector and debtor at the same time")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Unexpected error occurred when processing the invitation")
+     *         )
+     *     )
+     * )
+     */
     public function processInvitations($token)
     {
         $chargeInvitation = ChargeInvitation::where('token', $token)->first();
@@ -162,6 +527,51 @@ class ChargeController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Congratulations now you participate in this charge', 'data' => ['charge' => $charge, 'chargeInvitation' => $chargeInvitation]], 200);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/your-endpoint-here/get-payments-for-approval/{charge}",
+     *     summary="Get Payments for Approval",
+     *     description="Retrieve payments awaiting approval for a particular charge.",
+     *     tags={"Payments"},
+     *     @OA\Parameter(
+     *         name="charge",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the charge",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="charge_id",
+     *         in="query",
+     *         required=true,
+     *         description="ID of the charge",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully retrieved payments awaiting approval",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Listing of payments awaiting approval completed successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="installments", type="array", @OA\Items(ref="#/components/schemas/Installment"))
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden - Not the collector of this charge",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="You are not the collector of this charge, so you cannot get payments on approval")
+     *         )
+     *     )
+     * )
+     */
     public function getPaymentsForApproval(Request $request, Charge $charge)
     {
         $request->validate([
@@ -174,6 +584,79 @@ class ChargeController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Listing of payments under approval listed successfully', 'data' => ['installments' => $installments]], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/your-endpoint-here/upload-receipt/{installment}",
+     *     summary="Upload Receipt",
+     *     description="Upload a receipt image for a specific installment.",
+     *     tags={"Receipts"},
+     *     @OA\Parameter(
+     *         name="installment",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the installment",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Receipt image to upload",
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="image",
+     *                     description="Receipt image file (JPEG, PNG, JPG, GIF - Max 2MB)",
+     *                     type="string",
+     *                     format="binary"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="charge_id",
+     *                     description="ID of the charge",
+     *                     type="integer"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Receipt uploaded successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Proof sent successfully"),
+     *             @OA\Property(property="data", type="object", @OA\Property(property="path", type="string", example="/path/to/uploaded/receipt"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request - Installment already under payment approval analysis",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="This installment is already under payment approval analysis")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden - You cannot send payment for an installment of a charge for which you are not the debtor",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="You cannot send payment for an installment of a charge for which you are not the debtor")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity - Missing or invalid parameters",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Validation error"),
+     *             @OA\Property(property="errors", type="object", example="{ 'image': ['The image field is required.'] }")
+     *         )
+     *     )
+     * )
+     */
     public function uploadReceipt(Installment $installment, Request $request)
     {
         $request->validate([
@@ -200,6 +683,72 @@ class ChargeController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Proof sent successfully', 'data' => ['path' => $path]], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/your-endpoint-here/send-payment/{installment}",
+     *     summary="Send Payment for Approval",
+     *     description="Send payment for approval of a specific installment.",
+     *     tags={"Payments"},
+     *     @OA\Parameter(
+     *         name="installment",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the installment",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Request body with charge ID",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="charge_id",
+     *                     description="ID of the charge",
+     *                     type="integer"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment sent for approval successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Payment of the installment of the charge sent for analysis successfully"),
+     *             @OA\Property(property="data", type="null")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden - You cannot send payment for an installment of a charge for which you are not the debtor",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="You cannot send payment for an installment of a charge for which you are not the debtor")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Conflict - This installment is already under payment approval analysis",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="This installment is already under payment approval analysis")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity - Before sending the payment for analysis you need to send proof of payment",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Before sending the payment for analysis you need to send proof of payment")
+     *         )
+     *     )
+     * )
+     */
     public function sendPayment(Installment $installment, Request $request)
     {
         $request->validate([
@@ -219,6 +768,54 @@ class ChargeController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Payment of the installment of the charge sent for analysis successfully', 'data' => null], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/your-endpoint-here/accept-payment-approval/{charge}/{installment}",
+     *     summary="Accept Payment Approval by Collector",
+     *     description="Accept payment approval for a specific installment by the collector.",
+     *     tags={"Payments"},
+     *     @OA\Parameter(
+     *         name="charge",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the charge",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="installment",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the installment",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=false,
+     *         description="Request body",
+     *         @OA\MediaType(
+     *             mediaType="application/json"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment marked as paid successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Payment marked as paid successfully"),
+     *             @OA\Property(property="data", type="null")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden - You are not the collector of this charge and therefore cannot approve payments for this charge",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="You are not the collector of this charge and therefore cannot approve payments for this charge")
+     *         )
+     *     )
+     * )
+     */
     public function acceptPaymentApprovalByCollector(Request $request, Charge $charge, Installment $installment)
     {
         if ($charge->collector_id !== auth()->id()) {
