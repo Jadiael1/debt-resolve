@@ -5,9 +5,8 @@ use App\Http\Controllers\API\Auth\EmailVerificationController;
 use App\Http\Controllers\API\Auth\NewPasswordController;
 use App\Http\Controllers\API\ChargeController;
 use App\Http\Controllers\API\InstallmentController;
-use App\Http\Controllers\ChargeInvitationController;
-use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\ChargeInvitationController;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
