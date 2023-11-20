@@ -21,6 +21,8 @@ Um sistema web em Laravel para gerenciar dívidas, cobranças e controle finance
 5. Inicie o servidor: `php artisan serve`
 6. Acesse o sistema no navegador: `http://localhost:8000`
 
+- Versão em produção para testes: https://api.debtscrm.shop/public/openapi/
+
 ## Contribuição
 
 Este projeto está aberto a contribuições. Sinta-se à vontade para fazer um fork do repositório, implementar melhorias e criar pull requests.
