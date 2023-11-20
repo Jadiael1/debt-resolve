@@ -156,7 +156,7 @@ class AuthController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Logged out"),
-     *             @OA\Property(property="data", type="null", nullable=true)
+     *             @OA\Property(property="data")
      *         )
      *     ),
      *     @OA\Response(

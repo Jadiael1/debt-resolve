@@ -39,7 +39,7 @@ class NewPasswordController extends Controller
      *          @OA\JsonContent(
      *              @OA\Property(property="status", type="string", example="success"),
      *              @OA\Property(property="message", type="string", example="Reset password link sent successfully"),
-     *              @OA\Property(property="data", type="null"),
+     *              @OA\Property(property="data"),
      *          ),
      *      ),
      *      @OA\Response(
@@ -101,7 +101,7 @@ class NewPasswordController extends Controller
      *          @OA\JsonContent(
      *              @OA\Property(property="status", type="string", example="success"),
      *              @OA\Property(property="message", type="string", example="Password reset successfully"),
-     *              @OA\Property(property="data", type="null"),
+     *              @OA\Property(property="data"),
      *          ),
      *      ),
      *      @OA\Response(
@@ -110,7 +110,7 @@ class NewPasswordController extends Controller
      *          @OA\JsonContent(
      *              @OA\Property(property="status", type="string", example="error"),
      *              @OA\Property(property="message", type="string", example="Internal server error"),
-     *              @OA\Property(property="errors", type="null"),
+     *              @OA\Property(property="errors"),
      *          ),
      *      ),
      * )

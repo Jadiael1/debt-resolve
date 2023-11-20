@@ -80,7 +80,7 @@ class InstallmentController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="error"),
      *             @OA\Property(property="message", type="string", example="Installment not found"),
-     *             @OA\Property(property="errors", type="null")
+     *             @OA\Property(property="errors")
      *         )
      *     )
      * )
@@ -101,7 +101,7 @@ class InstallmentController extends Controller
      *      summary="List installments for a specific charge",
      *      description="Retrieve a list of installments associated with a specific charge.",
      *      @OA\Parameter(
-     *          name="charge",
+     *          name="charge_id",
      *          in="path",
      *          required=true,
      *          description="ID of the charge to retrieve installments",
@@ -130,7 +130,7 @@ class InstallmentController extends Controller
      *          @OA\JsonContent(
      *              @OA\Property(property="status", type="string", example="error"),
      *              @OA\Property(property="message", type="string", example="Charge not found"),
-     *              @OA\Property(property="data", type="null"),
+     *              @OA\Property(property="data"),
      *          ),
      *      ),
      * )
@@ -278,7 +278,7 @@ class InstallmentController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Payment of the installment of the charge sent for analysis successfully"),
-     *             @OA\Property(property="data", type="null")
+     *             @OA\Property(property="data")
      *         )
      *     ),
      *     @OA\Response(
@@ -383,13 +383,13 @@ class InstallmentController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/installments/{installment}/charge/{charge}/accept-payment-approval-by-collector",
+     *     path="/api/v1/installments/{installment}/charge/{charge_id}/accept-payment-approval-by-collector",
      *     security={{"bearerAuth": {}}},
      *     summary="Accept Payment Approval by Collector",
      *     description="Accept payment approval for a specific installment by the collector.",
      *     tags={"Installments"},
      *     @OA\Parameter(
-     *         name="charge",
+     *         name="charge_id",
      *         in="path",
      *         required=true,
      *         description="ID of the charge",
@@ -416,7 +416,7 @@ class InstallmentController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Payment marked as paid successfully"),
-     *             @OA\Property(property="data", type="null")
+     *             @OA\Property(property="data")
      *         )
      *     ),
      *     @OA\Response(

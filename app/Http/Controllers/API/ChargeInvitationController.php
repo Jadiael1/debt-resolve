@@ -246,7 +246,7 @@ class ChargeInvitationController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/charge-invitations/{chargeinvitation}/charge-invitation",
+     *     path="/api/v1/charge-invitations/{chargeInvitation}/charge-invitation",
      *     security={{"bearerAuth": {}}},
      *     summary="Get Invitation by ID",
      *     description="Retrieve a specific invitation by its ID.",

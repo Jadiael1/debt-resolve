@@ -50,7 +50,7 @@ class UserController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="message", type="string", example="Unauthenticated"),
-     *             @OA\Property(property="errors", type="null"),
+     *             @OA\Property(property="errors"),
      *             @OA\Property(property="status_code", type="integer", example=401)
      *         )
      *     )
@@ -105,7 +105,7 @@ class UserController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="message", type="string", example="Unauthenticated"),
-     *             @OA\Property(property="errors", type="null"),
+     *             @OA\Property(property="errors"),
      *             @OA\Property(property="status_code", type="integer", example=401)
      *         )
      *     )
@@ -159,13 +159,13 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/users/{user}/user",
+     *     path="/api/v1/users/{user_id}/user",
      *     security={{"bearerAuth": {}}},
      *     summary="Show User",
      *     description="Show details of a specific user",
      *     tags={"Users"},
      *     @OA\Parameter(
-     *         name="user",
+     *         name="user_id",
      *         in="path",
      *         description="User ID",
      *         required=true,
@@ -195,7 +195,7 @@ class UserController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="error"),
      *             @OA\Property(property="message", type="string", example="User not found"),
-     *             @OA\Property(property="data", type="null")
+     *             @OA\Property(property="data")
      *         )
      *     )
      * )

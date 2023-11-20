@@ -18,7 +18,7 @@ class EmailVerificationController extends Controller
      *     description="Verify the user's email address using the provided ID and hash",
      *     tags={"Auth"},
      *     @OA\Parameter(
-     *         name="id",
+     *         name="user_id",
      *         in="path",
      *         required=true,
      *         description="User ID",
@@ -62,7 +62,7 @@ class EmailVerificationController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Email verified successfully"),
-     *             @OA\Property(property="data", type="null", nullable=true)
+     *             @OA\Property(property="data")
      *         )
      *     ),
      *     @OA\Response(
@@ -72,7 +72,7 @@ class EmailVerificationController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="error"),
      *             @OA\Property(property="message", type="string", example="Error when checking email"),
-     *             @OA\Property(property="errors", type="null", nullable=true)
+     *             @OA\Property(property="errors")
      *         )
      *     )
      * )
@@ -111,7 +111,7 @@ class EmailVerificationController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Activation email sent, check your inbox or junk email"),
-     *             @OA\Property(property="data", type="null", nullable=true)
+     *             @OA\Property(property="data")
      *         )
      *     ),
      *     @OA\Response(
@@ -121,7 +121,7 @@ class EmailVerificationController extends Controller
      *             type="object",
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Your registration is already activated"),
-     *             @OA\Property(property="data", type="null", nullable=true)
+     *             @OA\Property(property="data")
      *         )
      *     )
      * )
