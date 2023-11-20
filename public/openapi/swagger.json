@@ -1833,14 +1833,14 @@
                 ]
             }
         },
-        "/api/v1/Installments/get-payments-for-approval/{charge}": {
+        "/api/v1/Installments/get-payments-for-approval/{charge}/charge": {
             "get": {
                 "tags": [
                     "Installments"
                 ],
                 "summary": "Get Payments for Approval",
                 "description": "Retrieve payments awaiting approval for a particular charge.",
-                "operationId": "d60936aaa06b49355b379a78b9373220",
+                "operationId": "a4b7fe75e190a609ed69a03aaa9d74ea",
                 "parameters": [
                     {
                         "name": "charge",

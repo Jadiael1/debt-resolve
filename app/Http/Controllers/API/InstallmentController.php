@@ -332,7 +332,7 @@ class InstallmentController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/Installments/get-payments-for-approval/{charge}",
+     *     path="/api/v1/Installments/get-payments-for-approval/{charge}/charge",
      *     security={{"bearerAuth": {}}},
      *     summary="Get Payments for Approval",
      *     description="Retrieve payments awaiting approval for a particular charge.",

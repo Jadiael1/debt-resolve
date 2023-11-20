@@ -44,7 +44,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/charge/{charge}', [InstallmentController::class, 'listInstallments'])->name('installments.listInstallments');
         Route::post('/upload-receipt/{installment}', [InstallmentController::class, 'uploadReceipt'])->name('installments.uploadReceipt');
         Route::post('/send-payment/{installment}', [InstallmentController::class, 'sendPayment'])->name('installments.sendPayment');
-        Route::post('/get-payments-for-approval/{charge}', [InstallmentController::class, 'getPaymentsForApproval'])->name('installments.getPaymentsForApproval');
+        Route::post('/get-payments-for-approval/{charge}/charge', [InstallmentController::class, 'getPaymentsForApproval'])->name('installments.getPaymentsForApproval');
         Route::post('/{installment}/charge/{charge}/accept-payment-approval-by-collector/', [InstallmentController::class, 'acceptPaymentApprovalByCollector'])->name('installments.acceptPaymentApprovalByCollector');
     });
 
