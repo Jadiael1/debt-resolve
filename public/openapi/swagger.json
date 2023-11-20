@@ -291,6 +291,25 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "expires",
+                        "in": "query",
+                        "description": "Expires timestamp",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "signature",
+                        "in": "query",
+                        "description": "Signature for verification",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -1833,27 +1852,18 @@
                 ]
             }
         },
-        "/api/v1/Installments/get-payments-for-approval/{charge}/charge": {
+        "/api/v1/installments/get-payments-for-approval/{charge}/charge": {
             "get": {
                 "tags": [
                     "Installments"
                 ],
                 "summary": "Get Payments for Approval",
                 "description": "Retrieve payments awaiting approval for a particular charge.",
-                "operationId": "a4b7fe75e190a609ed69a03aaa9d74ea",
+                "operationId": "113df2a89111423c2c940614e977d04a",
                 "parameters": [
                     {
                         "name": "charge",
                         "in": "path",
-                        "description": "ID of the charge",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "charge_id",
-                        "in": "query",
                         "description": "ID of the charge",
                         "required": true,
                         "schema": {

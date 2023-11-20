@@ -36,6 +36,25 @@ class EmailVerificationController extends Controller
      *             type="string"
      *         )
      *     ),
+     *     @OA\Parameter(
+     *         name="expires",
+     *         in="query",
+     *         description="Expires timestamp",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="signature",
+     *         in="query",
+     *         description="Signature for verification",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Email verified successfully",

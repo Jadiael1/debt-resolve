@@ -35,6 +35,16 @@
                 }
             })
             window.ui = ui
+            setTimeout(() => {
+                const a = document.createElement("a");
+                a.href = "https://documenter.getpostman.com/view/4813347/2s9Ye8fuxt";
+                a.innerText = "Documentation in postman";
+                a.style.display = "block";
+                a.style.marginTop = "8px";
+                a.style.textDecoration = "none";
+                a.target = "_blank";
+                document.querySelector("div.info__license > div").appendChild(a);
+            }, 1000);
         }
     </script>
 </body>

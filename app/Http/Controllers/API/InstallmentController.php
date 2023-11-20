@@ -332,7 +332,7 @@ class InstallmentController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/Installments/get-payments-for-approval/{charge}/charge",
+     *     path="/api/v1/installments/get-payments-for-approval/{charge}/charge",
      *     security={{"bearerAuth": {}}},
      *     summary="Get Payments for Approval",
      *     description="Retrieve payments awaiting approval for a particular charge.",
@@ -340,13 +340,6 @@ class InstallmentController extends Controller
      *     @OA\Parameter(
      *         name="charge",
      *         in="path",
-     *         required=true,
-     *         description="ID of the charge",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="charge_id",
-     *         in="query",
      *         required=true,
      *         description="ID of the charge",
      *         @OA\Schema(type="integer")
@@ -376,11 +369,11 @@ class InstallmentController extends Controller
      *     )
      * )
      */
-    public function getPaymentsForApproval(Request $request, Charge $charge)
+    public function getPaymentsForApproval(Charge $charge)
     {
-        $request->validate([
-            'charge_id' => 'required|integer'
-        ]);
+        // $request->validate([
+        //     'charge_id' => 'required|integer'
+        // ]);
         if ($charge->collector_id !== auth()->id()) {
             return response()->json(['status' => 'error', 'message' => 'You are not the collector of this charge, so you cannot get payments on approval', 'errors' => null], 403);
         }
@@ -437,7 +430,7 @@ class InstallmentController extends Controller
      *     )
      * )
      */
-    public function acceptPaymentApprovalByCollector(Request $request, Charge $charge, Installment $installment)
+    public function acceptPaymentApprovalByCollector(Installment $installment, Charge $charge)
     {
         if ($charge->collector_id !== auth()->id()) {
             return response()->json(['status' => 'error', 'message' => 'You are not the collector of this charge and therefore cannot approve payments for this charge.', 'errors' => null], 403);
