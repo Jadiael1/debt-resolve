@@ -230,10 +230,7 @@
                                             "type": "string",
                                             "example": "Logged out"
                                         },
-                                        "data": {
-                                            "type": "null",
-                                            "nullable": true
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -274,7 +271,7 @@
                 "operationId": "e277986e32b578605a2d4174fce8d145",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "user_id",
                         "in": "path",
                         "description": "User ID",
                         "required": true,
@@ -327,10 +324,7 @@
                                             "type": "string",
                                             "example": "Email verified successfully"
                                         },
-                                        "data": {
-                                            "type": "null",
-                                            "nullable": true
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -351,10 +345,7 @@
                                             "type": "string",
                                             "example": "Error when checking email"
                                         },
-                                        "errors": {
-                                            "type": "null",
-                                            "nullable": true
-                                        }
+                                        "errors": {}
                                     },
                                     "type": "object"
                                 }
@@ -387,10 +378,7 @@
                                             "type": "string",
                                             "example": "Activation email sent, check your inbox or junk email"
                                         },
-                                        "data": {
-                                            "type": "null",
-                                            "nullable": true
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -411,10 +399,7 @@
                                             "type": "string",
                                             "example": "Your registration is already activated"
                                         },
-                                        "data": {
-                                            "type": "null",
-                                            "nullable": true
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -467,9 +452,7 @@
                                             "type": "string",
                                             "example": "Reset password link sent successfully"
                                         },
-                                        "data": {
-                                            "type": "null"
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -567,9 +550,7 @@
                                             "type": "string",
                                             "example": "Password reset successfully"
                                         },
-                                        "data": {
-                                            "type": "null"
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -590,9 +571,7 @@
                                             "type": "string",
                                             "example": "Internal server error"
                                         },
-                                        "errors": {
-                                            "type": "null"
-                                        }
+                                        "errors": {}
                                     },
                                     "type": "object"
                                 }
@@ -1255,14 +1234,14 @@
                 ]
             }
         },
-        "/api/v1/charge-invitations/{chargeinvitation}/charge-invitation": {
+        "/api/v1/charge-invitations/{chargeInvitation}/charge-invitation": {
             "get": {
                 "tags": [
                     "Charge Invitations"
                 ],
                 "summary": "Get Invitation by ID",
                 "description": "Retrieve a specific invitation by its ID.",
-                "operationId": "d47a6ab9325ffafddeb2698b67dce465",
+                "operationId": "78a1d598d40f9a80579f11e4574ff059",
                 "parameters": [
                     {
                         "name": "chargeInvitation",
@@ -1480,9 +1459,7 @@
                                             "type": "string",
                                             "example": "Installment not found"
                                         },
-                                        "errors": {
-                                            "type": "null"
-                                        }
+                                        "errors": {}
                                     },
                                     "type": "object"
                                 }
@@ -1507,7 +1484,7 @@
                 "operationId": "listInstallments",
                 "parameters": [
                     {
-                        "name": "charge",
+                        "name": "charge_id",
                         "in": "path",
                         "description": "ID of the charge to retrieve installments",
                         "required": true,
@@ -1564,9 +1541,7 @@
                                             "type": "string",
                                             "example": "Charge not found"
                                         },
-                                        "data": {
-                                            "type": "null"
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -1775,9 +1750,7 @@
                                             "type": "string",
                                             "example": "Payment of the installment of the charge sent for analysis successfully"
                                         },
-                                        "data": {
-                                            "type": "null"
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -1931,17 +1904,17 @@
                 ]
             }
         },
-        "/api/v1/installments/{installment}/charge/{charge}/accept-payment-approval-by-collector": {
+        "/api/v1/installments/{installment}/charge/{charge_id}/accept-payment-approval-by-collector": {
             "post": {
                 "tags": [
                     "Installments"
                 ],
                 "summary": "Accept Payment Approval by Collector",
                 "description": "Accept payment approval for a specific installment by the collector.",
-                "operationId": "26716fa4b31d16caa6485af45845d81c",
+                "operationId": "a28faaea152285809d10c2a9d86520f7",
                 "parameters": [
                     {
-                        "name": "charge",
+                        "name": "charge_id",
                         "in": "path",
                         "description": "ID of the charge",
                         "required": true,
@@ -1981,9 +1954,7 @@
                                             "type": "string",
                                             "example": "Payment marked as paid successfully"
                                         },
-                                        "data": {
-                                            "type": "null"
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
@@ -2068,9 +2039,7 @@
                                             "type": "string",
                                             "example": "Unauthenticated"
                                         },
-                                        "errors": {
-                                            "type": "null"
-                                        },
+                                        "errors": {},
                                         "status_code": {
                                             "type": "integer",
                                             "example": 401
@@ -2145,9 +2114,7 @@
                                             "type": "string",
                                             "example": "Unauthenticated"
                                         },
-                                        "errors": {
-                                            "type": "null"
-                                        },
+                                        "errors": {},
                                         "status_code": {
                                             "type": "integer",
                                             "example": 401
@@ -2214,17 +2181,17 @@
                 ]
             }
         },
-        "/api/v1/users/{user}/user": {
+        "/api/v1/users/{user_id}/user": {
             "get": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Show User",
                 "description": "Show details of a specific user",
-                "operationId": "33571a4e35cbeff4932ce480a5c16d93",
+                "operationId": "b9bbe5397649d30b181b4c1c2664c161",
                 "parameters": [
                     {
-                        "name": "user",
+                        "name": "user_id",
                         "in": "path",
                         "description": "User ID",
                         "required": true,
@@ -2276,9 +2243,7 @@
                                             "type": "string",
                                             "example": "User not found"
                                         },
-                                        "data": {
-                                            "type": "null"
-                                        }
+                                        "data": {}
                                     },
                                     "type": "object"
                                 }
