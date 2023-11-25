@@ -350,7 +350,7 @@ class ChargeController extends Controller
         $charge->update(['payment_information' => $request->payment_information]);
         return response()->json([
             'status' => 'success',
-            'message' => 'Informações de pagamento atualizadas com sucesso.',
+            'message' => 'Payment information updated successfully.',
             'data' => $charge->payment_information,
         ], 200);
     }
