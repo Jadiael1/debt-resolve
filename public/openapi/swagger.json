@@ -812,14 +812,14 @@
                 ]
             }
         },
-        "/api/v1/charges/{charge}": {
+        "/api/v1/charges/{charge}/charge": {
             "get": {
                 "tags": [
                     "Charges"
                 ],
                 "summary": "Get a specific charge",
                 "description": "Returns a specific charge by ID",
-                "operationId": "602ce8a5af8f810ed36716228dd3a478",
+                "operationId": "bbab72a8070db04a59e0864346963841",
                 "parameters": [
                     {
                         "name": "charge",

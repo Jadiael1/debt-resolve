@@ -65,7 +65,7 @@ class ChargeController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/charges/{charge}",
+     *     path="/api/v1/charges/{charge}/charge",
      *     security={{"bearerAuth": {}}},
      *     summary="Get a specific charge",
      *     description="Returns a specific charge by ID",
@@ -343,9 +343,10 @@ class ChargeController extends Controller
         $request->validate([
             'payment_information' => 'required|string|max:255',
         ]);
-        if ($charge->collector_id !== auth()->id()) {
+        if (!$charge->collector_id && $charge->collector_id !== auth()->id()) {
             return response()->json(['status' => 'error', 'message' => 'You must be the collector of the charge you are trying to edit', 'errors' => null], 403);
         }
+
         $charge->update(['payment_information' => $request->payment_information]);
         return response()->json([
             'status' => 'success',
