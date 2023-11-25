@@ -893,6 +893,108 @@
                 ]
             }
         },
+        "/api/v1/charges/{charge}/payment_information": {
+            "put": {
+                "tags": [
+                    "Charges"
+                ],
+                "summary": "Updates payment information for a charge",
+                "description": "Updates payment information for a specific charge if the authenticated user is the biller.",
+                "operationId": "d73300bbffce40a0351ce32e3856d039",
+                "parameters": [
+                    {
+                        "name": "charge",
+                        "in": "path",
+                        "description": "Charge ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payment details to update",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "payment_information"
+                                ],
+                                "properties": {
+                                    "payment_information": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Banking or payment information"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment information updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment information updated successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "charge": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Charge"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object",
+                                            "example": "Updated banking information"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You must be the collector of the charge you are trying to edit"
+                                        },
+                                        "errors": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/charge-invitations/invitations": {
             "post": {
                 "tags": [
@@ -2282,6 +2384,11 @@
                         "description": "Total amount of the charge",
                         "type": "number",
                         "example": 500
+                    },
+                    "payment_information": {
+                        "description": "Payment Information",
+                        "type": "string",
+                        "example": "pix key: 0159487541"
                     },
                     "installments_number": {
                         "description": "Number of installments for the charge",

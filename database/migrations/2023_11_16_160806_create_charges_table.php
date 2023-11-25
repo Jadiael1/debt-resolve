@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 100)->comment('Billing name'); //nome da cobrança
             $table->string('description')->comment('Charge description'); //descrição da cobrança
             $table->decimal('amount', 10, 2, true)->comment('Total debt'); // total da divida
+            $table->string('payment_information', 255)->nullable()->comment('Payment Information');
             $table->integer('installments_number')->nullable()->comment('Number of installments'); // numero de parcelas
             $table->tinyInteger('due_day')->comment('Due day'); // dia de vencimento
             $table->unsignedBigInteger('collector_id')->nullable()->comment('Collector id'); // cobrador

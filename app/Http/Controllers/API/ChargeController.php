@@ -281,4 +281,76 @@ class ChargeController extends Controller
         }
         return response()->json(['status' => 'success', 'message' => 'Charge successfully created', 'data' => ['charge' => $charge]], 201);
     }
+
+
+    /**
+     * @OA\Put(
+     *     path="/api/v1/charges/{charge}/payment_information",
+     *     summary="Updates payment information for a charge",
+     *     description="Updates payment information for a specific charge if the authenticated user is the biller.",
+     *     tags={"Charges"},
+     *     @OA\Parameter(
+     *         name="charge",
+     *         in="path",
+     *         required=true,
+     *         description="Charge ID",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Payment details to update",
+     *         @OA\JsonContent(
+     *             required={"payment_information"},
+     *             @OA\Property(property="payment_information", type="string", maxLength=255, example="Banking or payment information")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment information updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Payment information updated successfully."),
+     *             @OA\Property(
+     *               property="data",
+     *               type="object",
+     *               example="Updated banking information",
+     *               @OA\Property(
+     *                     property="charge",
+     *                     type="array",
+     *                     @OA\Items(ref="#/components/schemas/Charge")
+     *               )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Access denied",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="You must be the collector of the charge you are trying to edit"),
+     *             @OA\Property(property="errors")
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
+    public function updatePaymentInformation(Request $request, Charge $charge)
+    {
+        $request->validate([
+            'payment_information' => 'required|string|max:255',
+        ]);
+        if ($charge->collector_id !== auth()->id()) {
+            return response()->json(['status' => 'error', 'message' => 'You must be the collector of the charge you are trying to edit', 'errors' => null], 403);
+        }
+        $charge->update(['payment_information' => $request->payment_information]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Informações de pagamento atualizadas com sucesso.',
+            'data' => $charge->payment_information,
+        ], 200);
+    }
 }

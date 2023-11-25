@@ -36,6 +36,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [ChargeController::class, 'index'])->name('charges.index');
         Route::get('/{charge}', [ChargeController::class, 'show'])->name('charges.show');
         Route::post('/', [ChargeController::class, 'store'])->name('charges.store');
+        Route::put('{charge}/payment_information', [ChargeController::class, 'updatePaymentInformation']);
     });
 
     Route::prefix('installments')->middleware(['auth:sanctum', 'verified'])->group(function () {

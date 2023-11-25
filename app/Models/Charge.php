@@ -34,6 +34,12 @@ use Illuminate\Database\Eloquent\Model;
  *         example=500.00
  *     ),
  *     @OA\Property(
+ *         property="payment_information",
+ *         type="string",
+ *         description="Payment Information",
+ *         example="pix key: 0159487541"
+ *     ),
+ *     @OA\Property(
  *         property="installments_number",
  *         type="integer",
  *         description="Number of installments for the charge",
@@ -83,6 +89,7 @@ class Charge extends Model
         'name',
         'description',
         'amount',
+        'payment_information',
         'installments_number',
         'due_day',
         'collector_id',
