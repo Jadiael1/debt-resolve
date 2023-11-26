@@ -4,7 +4,6 @@ const HomePage = () => {
   return (
     <MainLayout>
       <h1 className="text-center">Bem-vindo à Página Inicial</h1>
-      {/* Outros componentes da página */}
     </MainLayout>
   );
 };
