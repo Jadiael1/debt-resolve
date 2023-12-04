@@ -1,10 +1,22 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-	const { user } = useAuth();
-	if (!user) {
-		return <Navigate to='/login' />;
+interface ProtectedRouteProps {
+	children: React.ReactNode;
+	path: string;
+}
+
+export const ProtectedRoute = ({ children, path }: ProtectedRouteProps) => {
+	const { user, isLoading } = useAuth();
+	if (!user && !isLoading) {
+		return <Navigate to='/signin' />;
 	}
-	return <>{children}</>;
+
+	if (user && !isLoading && !user.isEmailVerified && path.includes('/dashboard') && path !== '/dashboard/resend-activation-link') {
+		return <Navigate to='/dashboard/resend-activation-link' />;
+	}
+
+	if (!isLoading) {
+		return <>{children}</>;
+	}
 };

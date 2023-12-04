@@ -6,6 +6,7 @@ export type UserType = {
 	username: string;
 	email: string;
 	name?: string;
+	isEmailVerified: boolean;
 };
 
 export type LoginResponse = {
@@ -23,6 +24,7 @@ type AuthContextType = {
 	token: string | null;
 	login: (email: string, password: string) => Promise<void>;
 	logout: () => void;
+	isLoading: boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -30,6 +32,7 @@ export const AuthContext = createContext<AuthContextType>({
 	token: null,
 	login: async () => {},
 	logout: () => {},
+	isLoading: true,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -37,6 +40,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<UserType | null>(null);
 	const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const loadUser = async () => {
@@ -51,13 +55,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					const data: LoginResponse = await request.json();
 					if (data.status === 'success') {
 						setUser(data.data.user);
-						setToken(data.data.token);
+						setToken(token);
+					} else {
+						setUser(null);
+						setToken(null);
 					}
 				} catch (error) {
-					console.error('Erro no login:', error);
+					setUser(null);
+					setToken(null);
 				}
 			}
+			setIsLoading(false);
 		};
+
 		loadUser();
 	}, [token]);
 
@@ -91,5 +101,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		localStorage.removeItem('token');
 	};
 
-	return <AuthContext.Provider value={{ user, token, login, logout }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>{children}</AuthContext.Provider>;
 };

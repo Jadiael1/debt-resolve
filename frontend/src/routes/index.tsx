@@ -1,8 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import routes from './routes';
 import { ProtectedRoute } from './ProtectedRoute';
+import { useAuth } from '../contexts/AuthContext';
 
 function AppRoutes() {
+	const { isLoading } = useAuth();
 	return (
 		<BrowserRouter>
 			<Routes>
@@ -13,11 +15,11 @@ function AppRoutes() {
 							path={path}
 							element={
 								isProtected ? (
-									<ProtectedRoute>
+									<ProtectedRoute path={path}>
 										<Component />
 									</ProtectedRoute>
 								) : (
-									<Component />
+									!isLoading && <Component />
 								)
 							}
 						/>

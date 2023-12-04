@@ -7,7 +7,7 @@ const UserDropdown = () => {
 	const { logout } = useContext(AuthContext);
 	return (
 		<ul className='hidden group-hover:block rounded-md absolute top-full right-0 bg-gray-900 text-white py-2 px-4 transition-all ease-in-out duration-300'>
-			<DropdownItem href='#'>
+			<DropdownItem href='/dashboard'>
 				<span className='w-2 h-2 mr-2 bg-green-500 rounded-full'></span>
 				<span>Dashboard</span>
 			</DropdownItem>
