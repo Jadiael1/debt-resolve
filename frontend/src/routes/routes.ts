@@ -6,6 +6,14 @@ import routesDash from './routesDash';
 import routeForgotPassword from './routeForgotPassword';
 import routeResetPassword from './routeResetPassword';
 
-const routes = [...routeHome, ...routeLogin, ...routeRegister, ...routeEmailVerification, ...routesDash, ...routeForgotPassword, ...routeResetPassword];
+const routes = [
+	...routeHome,
+	...routeLogin,
+	...routeRegister,
+	...routeEmailVerification,
+	...routesDash,
+	...routeForgotPassword,
+	...routeResetPassword,
+];
 
 export default routes;

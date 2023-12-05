@@ -21,16 +21,15 @@ const NavMenuReduced = () => {
 				Contato
 			</NavLink>
 			<ListItems className='border-t border-white my-1'></ListItems>
-			{user ? (
+			{user ?
 				<UserDropdownReduced />
-			) : (
-				<NavLink
+			:	<NavLink
 					className='list-item hover:bg-white hover:bg-opacity-10'
 					href='/signin'
 				>
 					Login
 				</NavLink>
-			)}
+			}
 		</ul>
 	);
 };

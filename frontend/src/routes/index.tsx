@@ -14,13 +14,11 @@ function AppRoutes() {
 							key={path}
 							path={path}
 							element={
-								isProtected ? (
+								isProtected ?
 									<ProtectedRoute path={path}>
 										<Component />
 									</ProtectedRoute>
-								) : (
-									!isLoading && <Component />
-								)
+								:	!isLoading && <Component />
 							}
 						/>
 					);

@@ -14,3 +14,8 @@ const App: React.FC = () => {
 export default App;
 // https://api.debtscrm.shop/api/v1
 // XSS
+/*
+npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-plugin-react-hooks eslint-config-prettier eslint-plugin-prettier
+#vite
+npm install --save-dev eslint-plugin-react eslint-config-prettier eslint-plugin-prettier
+*/

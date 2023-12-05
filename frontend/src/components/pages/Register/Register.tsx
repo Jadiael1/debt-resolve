@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bgRegister from '../../../assets/bglogin.png';
 
-
 const Register = () => {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
@@ -167,8 +166,8 @@ const Register = () => {
 					<div className='mt-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700'>
 						<p className='font-bold'>Cadastro Realizado!</p>
 						<p>
-							Quase lá! Por favor, verifique sua caixa de entrada ou a pasta de lixo eletrônico/spam para o e-mail de ativação da sua conta. É importante seguir as instruções do e-mail para concluir o processo
-							de registro.
+							Quase lá! Por favor, verifique sua caixa de entrada ou a pasta de lixo eletrônico/spam para o e-mail de
+							ativação da sua conta. É importante seguir as instruções do e-mail para concluir o processo de registro.
 						</p>
 						<p className='mt-4'>
 							<a

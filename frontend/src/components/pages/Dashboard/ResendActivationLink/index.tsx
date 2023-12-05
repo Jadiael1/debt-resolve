@@ -33,7 +33,9 @@ function ResendActivationLink() {
 		<div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4'>
 			<div className='bg-white shadow-lg rounded-lg p-6 w-full max-w-md'>
 				<h2 className='text-2xl font-semibold text-center text-gray-800 mb-4'>Reenviar Link de Ativação</h2>
-				<p className='text-center mb-6'>Clique no botão abaixo para reenviar o link de ativação da sua conta para o seu e-mail.</p>
+				<p className='text-center mb-6'>
+					Clique no botão abaixo para reenviar o link de ativação da sua conta para o seu e-mail.
+				</p>
 				<button
 					onClick={resendActivationLink}
 					disabled={isSubmitting}

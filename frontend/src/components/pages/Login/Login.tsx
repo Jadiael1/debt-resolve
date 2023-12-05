@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../../../contexts/AuthContext';
-import MailIcon from '../../../components/atoms/icons/MailIcon';
-import LockClosedIcon from '../../../components/atoms/icons/LockClosedIcon';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../contexts/AuthContext';
+import MailIcon from '../../atoms/icons/MailIcon';
+import LockClosedIcon from '../../atoms/icons/LockClosedIcon';
 import bglogin from '../../../assets/bglogin.png';
 
 const Login = () => {
@@ -18,7 +18,7 @@ const Login = () => {
 		if (user) {
 			navigate('/dashboard');
 		}
-	}, [user]);
+	}, [navigate, user]);
 
 	useEffect(() => {
 		document.title = 'DebtsResolve - Login';
@@ -52,6 +52,7 @@ const Login = () => {
 		>
 			<div className='w-full max-w-sm md:max-w-md lg:max-w-lg bg-white bg-opacity-95 rounded-xl shadow-xl p-6 border border-gray-300 sm:p-8'>
 				<button
+					type='button'
 					onClick={handleBack}
 					className='text-blue-600 hover:text-blue-700 text-sm font-medium mb-4'
 				>

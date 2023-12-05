@@ -12,7 +12,13 @@ export const ProtectedRoute = ({ children, path }: ProtectedRouteProps) => {
 		return <Navigate to='/signin' />;
 	}
 
-	if (user && !isLoading && !user.isEmailVerified && path.includes('/dashboard') && path !== '/dashboard/resend-activation-link') {
+	if (
+		user &&
+		!isLoading &&
+		!user.isEmailVerified &&
+		path.includes('/dashboard') &&
+		path !== '/dashboard/resend-activation-link'
+	) {
 		return <Navigate to='/dashboard/resend-activation-link' />;
 	}
 

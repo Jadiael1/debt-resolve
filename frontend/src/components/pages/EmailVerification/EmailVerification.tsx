@@ -19,12 +19,15 @@ function EmailVerification() {
 
 		const verifyEmail = async () => {
 			try {
-				const response = await fetch(`https://api.debtscrm.shop/api/v1/auth/email/verify/${userId}/${token}?expires=${expires}&signature=${signature}`, {
-					method: 'GET',
-					headers: {
-						Accept: 'application/json',
+				const response = await fetch(
+					`https://api.debtscrm.shop/api/v1/auth/email/verify/${userId}/${token}?expires=${expires}&signature=${signature}`,
+					{
+						method: 'GET',
+						headers: {
+							Accept: 'application/json',
+						},
 					},
-				});
+				);
 
 				if (response.ok) {
 					const data = await response.json();
@@ -53,7 +56,9 @@ function EmailVerification() {
 				return (
 					<div className='text-center p-4 bg-green-100 border-l-4 border-green-500 text-green-700 shadow-lg rounded transform transition-all duration-500 scale-105'>
 						<p className='font-bold text-xl mb-2 animate-bounce'>Parabéns!</p>
-						<p className='mb-4'>Sua conta foi ativada com sucesso. Agora você pode acessar todos os recursos do nosso site.</p>
+						<p className='mb-4'>
+							Sua conta foi ativada com sucesso. Agora você pode acessar todos os recursos do nosso site.
+						</p>
 						<Link
 							to='/signin'
 							className='inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-110'
@@ -88,7 +93,9 @@ function EmailVerification() {
 			className='flex items-center justify-center min-h-screen bg-fixed bg-no-repeat bg-cover bg-center'
 			style={{ backgroundImage: `url(${debtsresolveactivation})` }}
 		>
-			<div className='w-full max-w-md p-6 bg-white bg-opacity-95 rounded-xl shadow-2xl border border-gray-300'>{renderStatusBox()}</div>
+			<div className='w-full max-w-md p-6 bg-white bg-opacity-95 rounded-xl shadow-2xl border border-gray-300'>
+				{renderStatusBox()}
+			</div>
 		</div>
 	);
 }
