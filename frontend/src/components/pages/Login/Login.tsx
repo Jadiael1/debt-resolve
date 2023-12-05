@@ -9,6 +9,7 @@ const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [loginError, setLoginError] = useState(false);
+	const [isLogin, setIsLogin] = useState(false);
 	const { login, user } = useContext(AuthContext);
 	const navigate = useNavigate();
 
@@ -24,17 +25,20 @@ const Login = () => {
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
+		setIsLogin(true);
 		setLoginError(false);
 		try {
 			await login(email, password);
-			navigate('/');
+			navigate('/dashboard');
 		} catch (error) {
 			setLoginError(true);
+		} finally {
+			setIsLogin(false);
 		}
 	};
 
 	const handleBack = () => {
-		navigate(-1);
+		navigate('/');
 	};
 
 	return (
@@ -90,6 +94,7 @@ const Login = () => {
 					</div>
 					<button
 						type='submit'
+						disabled={isLogin}
 						className='w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition duration-300'
 					>
 						Entrar
