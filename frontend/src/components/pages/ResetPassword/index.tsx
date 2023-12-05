@@ -10,6 +10,8 @@ const ResetPassword = () => {
 	const [passwordConfirmation, setPasswordConfirmation] = useState('');
 	const [message, setMessage] = useState('');
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
+
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -23,6 +25,7 @@ const ResetPassword = () => {
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
+		setLoading(true);
 		setError('');
 		setMessage('');
 
@@ -49,6 +52,11 @@ const ResetPassword = () => {
 			}
 		} catch (error) {
 			setError('Erro de conexão com o servidor.');
+		} finally {
+			setLoading(false);
+			setEmail('');
+			setPassword('');
+			setPasswordConfirmation('');
 		}
 	};
 
@@ -117,9 +125,12 @@ const ResetPassword = () => {
 					</div>
 					<button
 						type='submit'
-						className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+						disabled={loading}
+						className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+							loading ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
+						} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
 					>
-						Redefinir Senha
+						{loading ? 'Redefinindo...' : 'Redefinir Senha'}
 					</button>
 				</form>
 				{message && <div className='mt-3 text-sm font-medium text-green-600'>{message}</div>}
