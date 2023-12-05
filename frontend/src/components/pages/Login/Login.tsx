@@ -9,6 +9,7 @@ const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [loginError, setLoginError] = useState(false);
+	const [loginErrorMessage, setLoginErrorMessage] = useState<string | null>(null);
 	const [isLogin, setIsLogin] = useState(false);
 	const { login, user } = useContext(AuthContext);
 	const navigate = useNavigate();
@@ -31,6 +32,9 @@ const Login = () => {
 			await login(email, password);
 			navigate('/dashboard');
 		} catch (error) {
+			if (error instanceof Error && error.message !== 'Validation error') {
+				setLoginErrorMessage('Erro desconhecido, tente fazer login novamente mais tarde.');
+			}
 			setLoginError(true);
 		} finally {
 			setIsLogin(false);
@@ -61,7 +65,7 @@ const Login = () => {
 						role='alert'
 					>
 						<p className='font-bold'>Falha no Login</p>
-						<p>Usuário ou senha incorretos. Por favor, tente novamente.</p>
+						<p>{loginErrorMessage ?? 'Usuário ou senha incorretos. Por favor, tente novamente.'}</p>
 					</div>
 				)}
 				<form
@@ -95,9 +99,11 @@ const Login = () => {
 					<button
 						type='submit'
 						disabled={isLogin}
-						className='w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition duration-300'
+						className={`w-full py-2 px-4 border ${
+							isLogin ? 'bg-gray-300' : 'border-transparent bg-blue-600 hover:bg-blue-700'
+						} text-sm font-medium rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition duration-300`}
 					>
-						Entrar
+						{!isLogin ? 'Entrar' : 'Entrando...'}
 					</button>
 				</form>
 				<div className='flex justify-between mt-6 text-sm font-medium'>

@@ -87,11 +87,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				setToken(data.data.token);
 				localStorage.setItem('token', data.data.token);
 			} else {
-				throw new Error('Login failed');
+				throw new Error(data.message);
 			}
 		} catch (error) {
-			throw new Error('Login failed');
-			// console.error('Erro no login:', error);
+			if (error instanceof Error && error.message === 'Validation error') {
+				throw new Error(error.message);
+			}
+			throw new Error(`unknown error`);
 		}
 	};
 
