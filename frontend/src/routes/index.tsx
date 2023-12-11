@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import routes from './routes';
 import { ProtectedRoute } from './ProtectedRoute';
 import { useAuth } from '../contexts/AuthContext';
+import LoadingComponent from '../components/pages/Loading';
 
 function AppRoutes() {
 	const { isLoading } = useAuth();
@@ -18,7 +19,9 @@ function AppRoutes() {
 									<ProtectedRoute path={path}>
 										<Component />
 									</ProtectedRoute>
-								:	!isLoading && <Component />
+								: !isLoading ?
+									<Component />
+								:	<LoadingComponent />
 							}
 						/>
 					);
