@@ -1,23 +1,24 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import debtscrmLogo from '../../assets/debtscrm1.png';
-import { Anchor } from './Anchor';
 
-const Logo = (): React.ReactElement => {
+const Logo = () => {
+	const navigate = useNavigate();
 	return (
-		<Anchor
-			href='#'
-			className='flex items-center mr-4 text-sm no-underline whitespace-nowrap text-white'
+		<a
+			onClick={(evt: React.MouseEvent<HTMLAnchorElement>) => {
+				evt.preventDefault();
+				navigate('/');
+			}}
+			href='/'
+			className='flex items-center text-white mr-6'
 		>
 			<img
 				src={debtscrmLogo}
-				alt=''
-				width='30'
-				height='24'
-				loading='lazy'
-				className='inline-block align-text-top'
+				alt='DebtsCRM Logo'
+				className='mr-3 h-6 sm:h-9'
 			/>
-			<span className='font-semibold'>DebtsCRM</span>
-		</Anchor>
+			<span className='self-center text-xl font-semibold whitespace-nowrap'>DebtsCRM</span>
+		</a>
 	);
 };
 
