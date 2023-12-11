@@ -1,5 +1,4 @@
-// PasswordResetRequest.tsx
-import React, { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import backgroundImage from '../../../assets/bg-password-reset-request.png';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,7 +8,7 @@ const PasswordResetRequest = () => {
 	const [message, setMessage] = useState('');
 	const navigate = useNavigate();
 
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setLoading(true);
 		setMessage('');
