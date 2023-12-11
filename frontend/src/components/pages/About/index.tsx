@@ -14,7 +14,7 @@ const AboutPage = () => {
 	return (
 		<div className='bg-gray-300'>
 			<Navbar />
-			<div className='container mx-auto px-4 py-8'>
+			<div className='mx-auto px-4 py-8'>
 				{/* Seção de Introdução */}
 				<section className='text-center py-8'>
 					<h1 className='text-4xl font-bold text-gray-800 mb-4'>Sobre o DebtsCRM</h1>
@@ -43,7 +43,7 @@ const AboutPage = () => {
 				</section>
 
 				{/* Seção de Contato ou Equipe */}
-				<section className='bg-gray-100 py-8'>
+				<section className='bg-gray-100 py-8 px-8 sm:px-0 rounded mb-2'>
 					<div className='text-center'>
 						<h2 className='text-3xl font-semibold text-gray-800'>Nossa Equipe</h2>
 						<p className='text-lg text-gray-600 mt-2 mb-8'>Conheça os profissionais por trás do DebtsCRM.</p>
@@ -51,26 +51,26 @@ const AboutPage = () => {
 						<div className='grid md:grid-cols-3 gap-8 px-4'>
 							<div className='text-center'>
 								<FaUserAstronaut className='mx-auto text-6xl text-blue-500 mb-4' />
-								<h3 className='text-xl font-semibold'>João Silva</h3>
+								<h3 className='text-xl font-semibold'>Jadiael Juvino</h3>
 								<p className='text-gray-600'>CEO & Fundador</p>
 							</div>
 
 							<div className='text-center'>
 								<FaUserNinja className='mx-auto text-6xl text-green-500 mb-4' />
-								<h3 className='text-xl font-semibold'>Maria Oliveira</h3>
+								<h3 className='text-xl font-semibold'>Jadiael Juvino</h3>
 								<p className='text-gray-600'>Chefe de Desenvolvimento</p>
 							</div>
 
 							<div className='text-center'>
 								<FaUserSecret className='mx-auto text-6xl text-red-500 mb-4' />
-								<h3 className='text-xl font-semibold'>Carlos Pereira</h3>
+								<h3 className='text-xl font-semibold'>Jadiael Juvino</h3>
 								<p className='text-gray-600'>Especialista em Segurança</p>
 							</div>
 						</div>
 					</div>
 				</section>
 				{/* Seção de Formulário de Contato */}
-				<section className='bg-white py-8'>
+				<section className='bg-white py-8 rounded'>
 					<div className='container mx-auto px-4'>
 						<h2 className='text-3xl font-semibold text-center text-gray-800'>Fale Conosco</h2>
 						<p className='text-lg text-center text-gray-600 my-4'>Tem perguntas? Gostaríamos de ouvir de você.</p>
