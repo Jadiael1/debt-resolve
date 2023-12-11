@@ -1,19 +1,7 @@
-import routeHome from './routeHome';
-import routeLogin from './routeLogin';
-import routeRegister from './routeRegister';
-import routeEmailVerification from './routeEmailVerification';
 import routesDash from './routesDash';
-import routeForgotPassword from './routeForgotPassword';
-import routeResetPassword from './routeResetPassword';
+import routesSite from './routesSite';
+import routesAuth from './routesAuth';
 
-const routes = [
-	...routeHome,
-	...routeLogin,
-	...routeRegister,
-	...routeEmailVerification,
-	...routesDash,
-	...routeForgotPassword,
-	...routeResetPassword,
-];
+const routes = [...routesDash, ...routesSite, ...routesAuth];
 
 export default routes;
