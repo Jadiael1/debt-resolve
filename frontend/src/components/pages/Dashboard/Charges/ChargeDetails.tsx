@@ -280,7 +280,7 @@ const ChargeDetails = () => {
 							type='submit'
 							className={`${
 								loadingInvite ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-700'
-							} ml-2 text-white font-bold py-1 px-2 rounded`}
+							} ml-2 text-white font-bold py-1 px-2 rounded mt-2 md:mt-0`}
 							disabled={loadingInvite ? true : false}
 						>
 							<span className='flex items-center'>
@@ -324,7 +324,7 @@ const ChargeDetails = () => {
 
 								<div className='mb-6'>
 									<p>
-										<strong>Criação da cobrança: </strong> {(charge?.created_at as string).substring(0, 19)}
+										<strong>Criação da cobrança: </strong> {charge?.created_at}
 									</p>
 									<p>
 										<strong>Minha função: </strong> {myRole}
