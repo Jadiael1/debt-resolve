@@ -1,20 +1,38 @@
+import { FaUserCircle } from 'react-icons/fa';
 import Dash from '../components/pages/Dashboard/Home';
-import ResendActivationLink from '../components/pages/Dashboard/ResendActivationLink';
+import CreateCharge from '../components/pages/Dashboard/Charges/create';
 import IRoutes from './IRoutes';
+import ListCharge from '../components/pages/Dashboard/Charges';
+import ChargeDetails from '../components/pages/Dashboard/Charges/ChargeDetails';
 
 const routesDash: IRoutes[] = [
 	{
 		path: '/dashboard',
 		component: Dash,
-		visibleInDisplay: true,
+		visibleInDisplay: false,
 		displayName: 'Dashboard',
+		protected: true,
+		icon: FaUserCircle,
+	},
+	{
+		path: '/dashboard/charge/create',
+		component: CreateCharge,
+		visibleInDisplay: false,
+		displayName: 'Criar Cobrança',
 		protected: true,
 	},
 	{
-		path: '/dashboard/resend-activation-link',
-		component: ResendActivationLink,
+		path: '/dashboard/charges',
+		component: ListCharge,
 		visibleInDisplay: false,
-		displayName: 'Reenviar link de ativação',
+		displayName: 'Ver Cobranças',
+		protected: true,
+	},
+	{
+		path: '/dashboard/charge/:chargeId',
+		component: ChargeDetails,
+		visibleInDisplay: false,
+		displayName: 'Ver Cobranças',
 		protected: true,
 	},
 ];
