@@ -24,6 +24,13 @@ function Dashboard() {
 					<h2 className='text-lg font-semibold'>Cobranças Ativas</h2>
 					<p className='text-gray-600 mt-2'>Veja suas cobranças ativas e gerencie-as.</p>
 				</div>
+				<div
+					className='bg-white rounded-lg shadow p-6 hover:shadow-md transition duration-300 ease-in-out cursor-pointer'
+					onClick={() => navigate('/dashboard/charge/charge-invitations')}
+				>
+					<h2 className='text-lg font-semibold'>Gerenciar Convites Para Cobranças</h2>
+					<p className='text-gray-600 mt-2'>Veja para qual cobranças você foi convidado.</p>
+				</div>
 			</div>
 		</Sidebar>
 	);
