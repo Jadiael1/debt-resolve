@@ -10,14 +10,14 @@ const Logo = () => {
 				navigate('/');
 			}}
 			href='/'
-			className='flex items-center text-white mr-6'
+			className='flex items-center text-white mr-6 ml-2 sm:ml-0'
 		>
 			<img
 				src={debtscrmLogo}
 				alt='DebtsCRM Logo'
-				className='mr-3 h-6 sm:h-9'
+				className='mr-2 h-6 sm:h-9'
 			/>
-			<span className='self-center text-xl font-semibold whitespace-nowrap'>DebtsCRM</span>
+			<span className='self-center font-semibold whitespace-nowrap text-sm sm:text-lg'>DebtsCRM</span>
 		</a>
 	);
 };
