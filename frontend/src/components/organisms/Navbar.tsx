@@ -51,7 +51,7 @@ const Navbar = () => {
 
 	return (
 		<nav className='bg-gray-800 text-white shadow-lg'>
-			<div className='container mx-auto flex justify-between items-center py-4 px-6'>
+			<div className='flex justify-between items-center py-4 sm:px-6'>
 				<div className='flex items-center'>
 					<Logo />
 					<NavigationMenu defaultClassName />
