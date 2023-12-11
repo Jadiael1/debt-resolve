@@ -78,7 +78,7 @@ const Dashboard = ({ children }: TSidebarProps) => {
 					</button>
 					<div
 						onClick={() => navigate('/')}
-						className='flex items-center cursor-pointer rounded border px-1 hover:bg-gray-900'
+						className='flex items-center cursor-pointer rounded border ml-4 px-1 hover:bg-gray-900'
 					>
 						<FaHome className='text-xl fill-white' />
 						<span className='ml-1 font-bold text-white'>Início</span>
