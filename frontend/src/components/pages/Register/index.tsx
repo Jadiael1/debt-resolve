@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bgRegister from '../../../assets/bglogin.png';
+import NavItem from '../../atoms/NavItem';
 
 const Register = () => {
 	const [name, setName] = useState('');
@@ -142,14 +143,14 @@ const Register = () => {
 								className='ml-2 block text-sm text-gray-600'
 							>
 								Concordo com os{' '}
-								<a
+								<NavItem
 									href='/terms'
 									target='_blank'
 									rel='noopener noreferrer'
 									className='text-blue-600 hover:text-blue-700'
 								>
 									termos e condições
-								</a>
+								</NavItem>
 								.
 							</label>
 						</div>
@@ -172,12 +173,12 @@ const Register = () => {
 							ativação da sua conta. É importante seguir as instruções do e-mail para concluir o processo de registro.
 						</p>
 						<p className='mt-4'>
-							<a
+							<NavItem
 								href='/signin'
 								className='text-blue-600 hover:text-blue-700'
 							>
 								Fazer Login
-							</a>
+							</NavItem>
 						</p>
 					</div>
 				)}
