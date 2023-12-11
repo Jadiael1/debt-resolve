@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
@@ -24,9 +24,31 @@ type TSidebarProps = {
 const Dashboard = ({ children }: TSidebarProps) => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [isChargesSubmenuOpen, setIsChargesSubmenuOpen] = useState(true);
+	const sidebarRef = useRef<HTMLDivElement>(null);
+
 	const { user } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
+
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') {
+				setIsSidebarOpen(false);
+			}
+		};
+		const handleClickOutside = (event: MouseEvent) => {
+			if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+				setIsSidebarOpen(false);
+			}
+		};
+		document.addEventListener('keydown', handleKeyDown);
+		document.addEventListener('mousedown', handleClickOutside);
+
+		return () => {
+			document.removeEventListener('keydown', handleKeyDown);
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
@@ -70,6 +92,7 @@ const Dashboard = ({ children }: TSidebarProps) => {
 				className={`fixed z-20 w-64 bg-gray-800 min-h-screen text-white transform ${
 					isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
 				} transition-transform duration-300 ease-in-out md:translate-x-0`}
+				ref={sidebarRef}
 			>
 				{/* ...User profile content... */}
 				<div className='bg-gray-700 p-4 text-center'>
