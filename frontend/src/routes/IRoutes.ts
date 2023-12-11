@@ -3,5 +3,6 @@ export default interface IRoutes {
 	visibleInDisplay?: boolean;
 	displayName?: string;
 	protected: boolean;
-	component: () => JSX.Element;
+	component: () => React.ReactNode;
+	icon?: () => JSX.Element | null;
 }
