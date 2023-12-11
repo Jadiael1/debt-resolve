@@ -92,7 +92,7 @@ function CreateCharge() {
 
 	return (
 		<Sidebar>
-			<div className='container mx-auto p-4'>
+			<div className='mx-auto p-4'>
 				{showForm && <h1 className='text-2xl font-semibold mb-4'>Criar Nova Cobrança</h1>}
 				{message.content && (
 					<div className='flex justify-center h-screen'>
@@ -229,7 +229,7 @@ function CreateCharge() {
 							type='submit'
 							className={`${
 								loading ? 'bg-gray-500 cursor-wait' : 'bg-blue-500 hover:bg-blue-700'
-							} text-white font-bold py-2 px-4 rounded flex items-center`}
+							} text-white font-bold py-2 px-4 rounded flex items-center justify-center`}
 							disabled={loading ? true : false}
 						>
 							Criar Cobrança
