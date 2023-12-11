@@ -64,13 +64,15 @@ function ListCharges() {
 					</div>
 				:	<div className='bg-white p-4 rounded-lg shadow text-center'>
 						<p>Você ainda não possui cobranças como {role === 'debtor' ? 'devedor' : 'cobrador'}.</p>
-						<button
-							onClick={() => navigate('/dashboard/charge/create')}
-							className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center'
-						>
-							<FaPlus className='mr-2' />
-							Criar Cobrança
-						</button>
+						<div className='flex items-center justify-center'>
+							<button
+								onClick={() => navigate('/dashboard/charge/create')}
+								className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center'
+							>
+								<FaPlus className='mr-2' />
+								Criar Cobrança
+							</button>
+						</div>
 					</div>
 				}
 			</div>
