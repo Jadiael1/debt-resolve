@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthContext';
-import MailIcon from '../../atoms/icons/MailIcon';
-import LockClosedIcon from '../../atoms/icons/LockClosedIcon';
 import bglogin from '../../../assets/bglogin.png';
+import { FaMailBulk, FaUserLock } from 'react-icons/fa';
+import NavItem from '../../atoms/NavItem';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
@@ -74,7 +74,7 @@ const Login = () => {
 					className='space-y-4'
 				>
 					<div className='relative'>
-						<MailIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-blue-500 z-20' />
+						<FaMailBulk className='absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-blue-500 z-20' />
 						<input
 							type='email'
 							id='email'
@@ -86,7 +86,7 @@ const Login = () => {
 						/>
 					</div>
 					<div className='relative'>
-						<LockClosedIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-blue-500 z-20' />
+						<FaUserLock className='absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-blue-500 z-20' />
 						<input
 							type='password'
 							id='password'
@@ -108,18 +108,18 @@ const Login = () => {
 					</button>
 				</form>
 				<div className='flex justify-between mt-6 text-sm font-medium'>
-					<a
+					<NavItem
 						href='/forgot-password'
 						className='text-blue-600 hover:text-blue-700'
 					>
 						Esqueceu sua senha?
-					</a>
-					<a
+					</NavItem>
+					<NavItem
 						href='/signup'
 						className='text-blue-600 hover:text-blue-700'
 					>
 						Criar uma nova conta
-					</a>
+					</NavItem>
 				</div>
 			</div>
 		</div>
