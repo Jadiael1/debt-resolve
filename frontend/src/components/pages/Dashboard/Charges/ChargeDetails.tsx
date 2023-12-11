@@ -243,6 +243,8 @@ const ChargeDetails = () => {
 	const oppositeRole = charge && charge.collector_id === parseInt(user?.id as string) ? 'Devedor' : 'Cobrador';
 	const myRole = charge && charge.collector_id === parseInt(user?.id as string) ? 'Cobrador' : 'Devedor';
 
+	const paidInstallments = installments.filter(installment => installment.paid && installment.awaiting_approval);
+
 	return (
 		<Sidebar>
 			{notification.message && (
@@ -336,15 +338,15 @@ const ChargeDetails = () => {
 									.map(installment => (
 										<div key={installment.id}>
 											<h2 className='text-xl font-bold mb-2'>Parcelas para dar baixa</h2>
-											<div className='mb-4 p-4 border rounded flex justify-between flex-wrap'>
+											<div className='mb-4 p-4 border rounded block md:flex md:justify-between md:items-center md:flex-wrap'>
 												<div className='block break-all'>
 													<p>
 														Parcela {installment.installment_number}: R$ {installment.value}
 													</p>
 													<p>Vencimento: {installment.due_date}</p>
 												</div>
-												<div>
-													{installment.payment_proof && (
+												{installment.payment_proof && (
+													<div className='flex items-center justify-center mt-2'>
 														<p>
 															<a
 																href={`${installment.payment_proof.path}`}
@@ -358,23 +360,27 @@ const ChargeDetails = () => {
 																/>
 															</a>
 														</p>
-													)}
-												</div>
-												<div className='flex items-center'>
-													<button
-														onClick={() => handleConfirmPayment(installment.id, true)}
-														className='ml-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded flex items-center'
-													>
-														<FaCheck className='mr-2' />
-														Confirmar
-													</button>
-													<button
-														onClick={() => handleConfirmPayment(installment.id, false)}
-														className='ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded flex items-center'
-													>
-														<FaBan className='mr-2' />
-														Recusar
-													</button>
+													</div>
+												)}
+												<div className='block md:flex md:items-center md:flex-wrap'>
+													<div className='flex items-center justify-center'>
+														<button
+															onClick={() => handleConfirmPayment(installment.id, true)}
+															className='text-sm md:text-base md:mr-2 my-2 py-1 px-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded flex items-center justify-center'
+														>
+															<FaCheck className='mr-2' />
+															Confirmar
+														</button>
+													</div>
+													<div className='flex items-center justify-center'>
+														<button
+															onClick={() => handleConfirmPayment(installment.id, false)}
+															className='text-sm md:text-base py-1 px-2 bg-red-500 hover:bg-red-700 text-white font-bold rounded flex items-center justify-center'
+														>
+															<FaBan className='mr-2' />
+															Recusar
+														</button>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -431,13 +437,11 @@ const ChargeDetails = () => {
 										))}
 								</div>
 							</div>
-
-							<div>
-								<h2 className='text-xl font-bold mb-2 text-green-400'>Parcelas Pagas</h2>
+							{paidInstallments.length ?
 								<div>
-									{installments
-										.filter(installment => installment.paid && installment.awaiting_approval)
-										.map(installment => (
+									<h2 className='text-xl font-bold mb-2 text-green-400'>Parcelas Pagas</h2>
+									<div>
+										{paidInstallments.map(installment => (
 											<div
 												key={installment.id}
 												className='mb-4 p-4 border-green-400 border-2 rounded md:flex md:justify-between md:flex-wrap'
@@ -462,8 +466,9 @@ const ChargeDetails = () => {
 												</div>
 											</div>
 										))}
+									</div>
 								</div>
-							</div>
+							:	null}
 						</>
 					}
 				</div>
