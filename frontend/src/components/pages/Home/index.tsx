@@ -1,3 +1,4 @@
+import NavItem from '../../atoms/NavItem';
 import Navbar from '../../organisms/Navbar';
 
 const HomePage = () => {
@@ -45,12 +46,12 @@ const HomePage = () => {
 					<div className='container mx-auto text-center py-6'>
 						<h2 className='text-3xl font-semibold text-white'>Pronto para Começar?</h2>
 						<p className='text-white mt-2'>Junte-se a nós e gerencie suas cobranças de maneira eficiente.</p>
-						<a
+						<NavItem
 							href='/signup'
 							className='mt-4 inline-block bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300'
 						>
 							Cadastre-se Agora
-						</a>
+						</NavItem>
 					</div>
 				</div>
 
