@@ -157,6 +157,19 @@ const Dashboard = ({ children }: TSidebarProps) => {
 										Suas Cobranças
 									</div>
 								</li>
+								<li
+									className={`${isActive(
+										'/dashboard/charge/charge-invitations',
+									)} cursor-pointer hover:text-gray-200 hover:bg-gray-700`}
+								>
+									<div
+										onClick={() => navigate('/dashboard/charge/charge-invitations')}
+										className='py-1 flex items-center'
+									>
+										<FaList className='mr-2' />
+										Convites
+									</div>
+								</li>
 							</ul>
 						)}
 					</li>
