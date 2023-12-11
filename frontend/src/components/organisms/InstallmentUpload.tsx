@@ -2,12 +2,38 @@ import { useRef, useState } from 'react';
 import { FaTimesCircle, FaUpload } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 
+type payment_proof = {
+	originalFileName: string;
+	newFileName: string;
+	path: string;
+};
+
+type Installment = {
+	id: number;
+	value: string;
+	installment_number: number;
+	due_date: string;
+	amount_paid: string | null;
+	paid: boolean;
+	payment_proof: payment_proof | null;
+	awaiting_approval: boolean;
+	user_id: number | null;
+	charge_id: number;
+};
+
 interface InstallmentUploadProps {
 	installmentId: number;
 	chargeId: number;
+	showNotification?: (message: string, type: string) => void;
+	setInstallments?: React.Dispatch<React.SetStateAction<Installment[]>>;
 }
 
-const InstallmentUpload = ({ installmentId = 0, chargeId = 0 }: InstallmentUploadProps) => {
+const InstallmentUpload = ({
+	installmentId = 0,
+	chargeId = 0,
+	showNotification,
+	setInstallments,
+}: InstallmentUploadProps) => {
 	const [selectedImage, setSelectedImage] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,7 +49,39 @@ const InstallmentUpload = ({ installmentId = 0, chargeId = 0 }: InstallmentUploa
 			body: formData,
 		});
 		const data = await response.json();
-		console.log(data);
+		if (
+			response.ok &&
+			response.status === 200 &&
+			data.message === 'Proof sent successfully' &&
+			showNotification &&
+			setInstallments
+		) {
+			showNotification('Comprovante enviado com sucesso', 'success');
+			setInstallments(prevInstallments =>
+				prevInstallments.map(installment =>
+					installment.id === installmentId ?
+						{ ...installment, payment_proof: { originalFileName: '', newFileName: '', path: data.data.path } }
+					:	installment,
+				),
+			);
+		}
+		if (
+			response.status === 400 &&
+			data.message === 'This installment is already under payment approval analysis' &&
+			showNotification
+		) {
+			showNotification('Esta parcela já está em análise de aprovação de pagamento', 'error');
+		}
+		if (
+			response.status === 403 &&
+			data.message === 'You cannot send payment for an installment of a charge for which you are not the debtor' &&
+			showNotification
+		) {
+			showNotification(
+				'Você não pode enviar o pagamento de uma parcela de um encargo do qual você não é o devedor',
+				'error',
+			);
+		}
 	};
 
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +129,7 @@ const InstallmentUpload = ({ installmentId = 0, chargeId = 0 }: InstallmentUploa
 			)}
 
 			{previewUrl && (
-				<div className='mt-4 flex items-center'>
+				<div className='mt-4 relative'>
 					<img
 						src={previewUrl}
 						alt='Preview'
@@ -79,23 +137,23 @@ const InstallmentUpload = ({ installmentId = 0, chargeId = 0 }: InstallmentUploa
 					/>
 					<button
 						type='button'
-						className='ml-2 text-red-500 hover:text-red-700'
+						className='absolute top-1 right-1'
 						onClick={removeSelectedImage}
 					>
-						<FaTimesCircle size={24} />
+						<FaTimesCircle
+							className='fill-red-500 rounded border-2 border-red-500 hover:fill-red-400 bg-slate-300 hover:bg-slate-100'
+							size={24}
+						/>
+					</button>
+					<button
+						type='submit'
+						form='sendProof'
+						className='bg-green-500 mt-2 text-center hover:bg-green-700 text-white font-bold py-1 px-2 rounded w-full'
+						onClick={() => handleUploadProof()}
+					>
+						Upload
 					</button>
 				</div>
-			)}
-
-			{previewUrl && (
-				<button
-					type='submit'
-					form='sendProof'
-					className='ml-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded flex flex-wrap items-center justify-center'
-					onClick={() => handleUploadProof()}
-				>
-					Upload
-				</button>
 			)}
 		</form>
 	);
