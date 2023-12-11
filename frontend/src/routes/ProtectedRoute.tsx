@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import LoadingComponent from '../components/pages/Loading';
 
 interface ProtectedRouteProps {
 	children: React.ReactNode;
@@ -7,7 +8,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children, path }: ProtectedRouteProps) => {
-	const { user, isLoading } = useAuth();
+	const { user, isLoading, token } = useAuth();
 	if (!user && !isLoading) {
 		return <Navigate to='/signin' />;
 	}
@@ -24,5 +25,9 @@ export const ProtectedRoute = ({ children, path }: ProtectedRouteProps) => {
 
 	if (!isLoading) {
 		return <>{children}</>;
+	}
+
+	if (isLoading && !user && !token) {
+		return <LoadingComponent />;
 	}
 };
