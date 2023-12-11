@@ -4,6 +4,7 @@ import CreateCharge from '../components/pages/Dashboard/Charges/create';
 import IRoutes from './IRoutes';
 import ListCharge from '../components/pages/Dashboard/Charges';
 import ChargeDetails from '../components/pages/Dashboard/Charges/ChargeDetails';
+import ChargeInvitationsList from '../components/pages/Dashboard/Charges/Invitations/list/ChargeInvitations';
 
 const routesDash: IRoutes[] = [
 	{
@@ -33,6 +34,13 @@ const routesDash: IRoutes[] = [
 		component: ChargeDetails,
 		visibleInDisplay: false,
 		displayName: 'Ver Cobranças',
+		protected: true,
+	},
+	{
+		path: '/dashboard/charge/charge-invitations',
+		component: ChargeInvitationsList,
+		visibleInDisplay: false,
+		displayName: 'Ver convite para cobranças',
 		protected: true,
 	},
 ];
