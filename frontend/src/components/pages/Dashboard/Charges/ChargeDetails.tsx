@@ -440,7 +440,7 @@ const ChargeDetails = () => {
 										.map(installment => (
 											<div
 												key={installment.id}
-												className='mb-4 p-4 border border-green-400 border-2 rounded md:flex md:justify-between md:flex-wrap'
+												className='mb-4 p-4 border-green-400 border-2 rounded md:flex md:justify-between md:flex-wrap'
 											>
 												<div className='block break-all text-center'>
 													<p>
