@@ -56,13 +56,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					if (data.status === 'success') {
 						setUser(data.data.user);
 						setToken(token);
-					} else {
-						setUser(null);
-						setToken(null);
+					} else if (request.status === 401 && data.status === 'error' && data.message === 'unauthorized') {
+						logout();
 					}
 				} catch (error) {
-					setUser(null);
-					setToken(null);
+					if (error instanceof Error && error.message === 'Validation error') {
+						throw new Error(error.message);
+					}
+					throw new Error(`unknown error`);
 				}
 			}
 			setIsLoading(false);
@@ -82,10 +83,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				body: JSON.stringify({ email, password }),
 			});
 			const data: LoginResponse = await request.json();
-			if (data.status === 'success') {
+			if (request.ok && request.status === 200 && data.status === 'success') {
 				setUser(data.data.user);
 				setToken(data.data.token);
 				localStorage.setItem('token', data.data.token);
+			} else if (request.status === 401 && data.status === 'error' && data.message === 'unauthorized') {
+				logout();
 			} else {
 				throw new Error(data.message);
 			}
