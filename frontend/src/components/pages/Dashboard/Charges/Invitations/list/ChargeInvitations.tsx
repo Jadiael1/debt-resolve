@@ -51,7 +51,7 @@ const ChargeInvitationsList = () => {
 					setInvitations(data.data['charge-invitation']);
 				}
 			} catch (error) {
-				// showNotification('Erro ao carregar convites', 'error');
+				showNotification('Erro ao carregar convites', 'error');
 			}
 		};
 		getInvitationsByEmail();
@@ -134,35 +134,42 @@ const ChargeInvitationsList = () => {
 						onClose={clearNotification}
 					/>
 				)}
-				<h2 className='text-lg font-bold mb-4'>Convites para Cobranças</h2>
-				<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-					{invitations.map(invitation => (
-						<div
-							key={invitation.id}
-							className='p-4 border rounded-lg block md:flex md:items-center md:justify-between'
-						>
-							<div className='flex items-center'>
-								<RiMailOpenLine className='text-xl mr-2' />
-								<p className='text-sm'>Cobrança #{invitation.charge_id}</p>
-							</div>
+				{invitations.length ?
+					<>
+						<h2 className='text-lg font-bold mb-4'>Convites para Cobranças</h2>
+						<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+							{invitations.map(invitation => (
+								<div
+									key={invitation.id}
+									className='p-4 border rounded-lg block md:flex md:items-center md:justify-between'
+								>
+									<div className='flex items-center'>
+										<RiMailOpenLine className='text-xl mr-2' />
+										<p className='text-sm'>Cobrança #{invitation.charge_id}</p>
+									</div>
 
-							<div className=''>
-								<button
-									className='mr-2 mb-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
-									onClick={() => handleInvitationAction(invitation.token, false)}
-								>
-									Recusar
-								</button>
-								<button
-									className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-									onClick={() => handleInvitationAction(invitation.token, true)}
-								>
-									Aceitar
-								</button>
-							</div>
+									<div className=''>
+										<button
+											className='mr-2 mb-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+											onClick={() => handleInvitationAction(invitation.token, false)}
+										>
+											Recusar
+										</button>
+										<button
+											className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+											onClick={() => handleInvitationAction(invitation.token, true)}
+										>
+											Aceitar
+										</button>
+									</div>
+								</div>
+							))}
 						</div>
-					))}
-				</div>
+					</>
+				:	<div className='flex items-center justify-center mt-10 font-bold text-lg'>
+						Você não tem convites no momento.
+					</div>
+				}
 			</div>
 		</Sidebar>
 	);
