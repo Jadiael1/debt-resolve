@@ -26,7 +26,7 @@ function CreateCharge() {
 		amount: 0,
 		installments_number: 0,
 		due_day: 0,
-		collector_id: 0,
+		collector_id: user?.id as number,
 		debtor_id: 0,
 		role: '',
 	});
@@ -35,7 +35,9 @@ function CreateCharge() {
 		const newChargeData =
 			evt.target.name === 'role' && evt.target.value === 'collector' ?
 				{ ...chargeData, ...{ collector_id: user?.id as number, debtor_id: 0, [evt.target.name]: evt.target.value } }
-			:	{ ...chargeData, ...{ debtor_id: user?.id as number, collector_id: 0, [evt.target.name]: evt.target.value } };
+			: evt.target.name === 'role' && evt.target.value === 'debtor' ?
+				{ ...chargeData, ...{ debtor_id: user?.id as number, collector_id: 0, [evt.target.name]: evt.target.value } }
+			:	{ ...chargeData, [evt.target.name]: evt.target.value };
 		setChargeData(newChargeData);
 	};
 
@@ -44,6 +46,7 @@ function CreateCharge() {
 		setLoading(true);
 		delete chargeData.role;
 		chargeData.collector_id === 0 ? delete chargeData.collector_id : delete chargeData.debtor_id;
+
 		try {
 			const response = await fetch('https://api.debtscrm.shop/api/v1/charges', {
 				method: 'POST',
