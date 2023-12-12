@@ -60,18 +60,10 @@ const ChargeDetails = () => {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const chargeData = await chargeResponse.json();
-			if (chargeData.status === 'success') {
+			if (chargeResponse.ok && chargeResponse.status === 200 && chargeData.status === 'success') {
 				setCharge(chargeData.data.charge);
+				setInstallments(chargeData.data.charge.installments);
 			}
-
-			const installmentsResponse = await fetch(`https://api.debtscrm.shop/api/v1/installments/charge/${chargeId}`, {
-				headers: { Authorization: `Bearer ${token}` },
-			});
-			const installmentsData = await installmentsResponse.json();
-			if (installmentsData.status === 'success') {
-				setInstallments(installmentsData.data.Installments);
-			}
-
 			setLoading(false);
 		};
 		fetchChargeDetails();
