@@ -388,21 +388,29 @@ const ChargeDetails = () => {
 												key={installment.id}
 												className='mb-4 p-4 border rounded md:flex md:justify-between md:flex-wrap'
 											>
-												<div className='block break-all text-center'>
-													<p>
-														Parcela {installment.installment_number}: R$ {installment.value}
-													</p>
-													<p>Vencimento: {installment.due_date}</p>
+												<div className='flex items-center'>
+													<div className='block break-all text-center'>
+														<p>
+															Parcela {installment.installment_number}: R$ {installment.value}
+														</p>
+														<p>Vencimento: {installment.due_date}</p>
+													</div>
 												</div>
 												<div className='mb-2 mt-2 flex justify-center items-center'>
 													{installment.payment_proof && (
 														<p>
-															<img
-																className=''
-																src={`${installment.payment_proof.path}`}
-																alt='comprovante'
-																width={'128px'}
-															/>
+															<a
+																href={`${installment.payment_proof.path}`}
+																target='_blank'
+																rel='noreferrer'
+															>
+																<img
+																	className=''
+																	src={`${installment.payment_proof.path}`}
+																	alt='comprovante'
+																	width={'128px'}
+																/>
+															</a>
 														</p>
 													)}
 												</div>
@@ -447,12 +455,18 @@ const ChargeDetails = () => {
 												<div className='mb-2 mt-2 flex justify-center items-center'>
 													{installment.payment_proof && (
 														<p>
-															<img
-																className=''
-																src={`${installment.payment_proof.path}`}
-																alt='comprovante'
-																width={'128px'}
-															/>
+															<a
+																href={`${installment.payment_proof.path}`}
+																target='_blank'
+																rel='noreferrer'
+															>
+																<img
+																	className=''
+																	src={`${installment.payment_proof.path}`}
+																	alt='comprovante'
+																	width={'128px'}
+																/>
+															</a>
 														</p>
 													)}
 												</div>
